@@ -5,5 +5,10 @@ package base_attack;
  * Project: Base-Attack
  */
 public class Base extends Tower {
+
+	@Override
+	public void update(double t) {
+		
+	}
     //TODO
 }

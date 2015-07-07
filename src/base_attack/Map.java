@@ -4,14 +4,14 @@ import java.util.*;
 
 public class Map {
 	
-	Tile[][] fields;
-	List<Tower> towers = new ArrayList<Tower>();
+	private final Tile[][] fields;
+	private final List<Mob> mobs = new ArrayList<Mob>();
 	
 	public Map(int width, int height) {
 		this.fields = new Tile[width][height];
 		for(int x = 0; x < width; x++)
 			for(int y = 0; y < height; y++)
-				getTiles()[x][y] = new Tile();
+				getTiles()[x][y] = new Tile(x, y);
 	}
 
 	public Tile[][] getTiles() {
@@ -30,5 +30,9 @@ public class Map {
 			return false;
 		fields[x][y].setTower(newTower);
 		return true;
+	}
+
+	public List<Mob> getMobs() {
+		return mobs;
 	}
 }

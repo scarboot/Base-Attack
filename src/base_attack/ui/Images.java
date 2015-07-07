@@ -1,7 +1,6 @@
 package base_attack.ui;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
@@ -17,7 +16,7 @@ public class Images {
 		
 		try {
 			return ImageIO.read(stream);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new RuntimeException("Failed to load image: " + path, e);
 		}
 		

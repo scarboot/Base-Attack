@@ -93,8 +93,7 @@ public class MobSpawner implements Updateable {
 		}
 
 		private boolean mobsLeft() {
-			//TODO
-			return true;
+			return !getGame().getMap().getMobs().isEmpty();
 		}
 
 		public void calcTimes() {
