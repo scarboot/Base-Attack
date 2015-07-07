@@ -88,7 +88,7 @@ public class Frame extends JFrame {
 		x = posX * tile.getWidth(),
 		y = posY * tile.getHeight();
 		
-		g.drawImage(tile.getTileType().IMAGE, x, y, null);
+		g.drawImage(tile.getType().IMAGE, x, y, null);
 		
 	}
 

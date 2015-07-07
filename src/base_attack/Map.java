@@ -14,4 +14,18 @@ public class Map {
 	public Tile[][] getTiles() {
 		return fields;
 	}
+
+	public boolean setTile(int x, int y, TileType type){
+		if(fields[x][y] != null)
+			return false;
+		fields[x][y].setType(type);
+		return true;
+	}
+
+	public boolean setTower(int x, int y, Tower newTower) {
+		if(fields[x][y].hasTower())
+			return false;
+		fields[x][y].setTower(newTower);
+		return true;
+	}
 }
