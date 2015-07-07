@@ -8,7 +8,7 @@ import java.util.Random;
  */
 public class MapGenerator {
 
-    public static final int X = 9, Y = 15, DIRTAMOUNT = 10;
+    public static final int X = 15, Y = 9, DIRTAMOUNT = 10;
     public static Random random = new Random();
 
     public static Map generateMap(){
@@ -16,15 +16,15 @@ public class MapGenerator {
         for (int i = 0; i < X; i++) {
             for (int j = 0; j < Y; j++) {
                 // Filling everything with stones
-                newMap.setTile(X, Y, TileType.STONE);
+                newMap.setTile(i, j, TileType.STONE);
             }
         }
 
         //TODO Generating way properly, at the moment only straight street
-        newMap.setTower(0, (Y%2), new Base());
+        newMap.setTower(0, (Y/2), new Base());
 
         for (int i = 0; i < X; i++) {
-            newMap.setTile(i, 7, TileType.GRASS);
+            newMap.setTile(i, Y/2, TileType.GRASS);
         }
 
         //for (int i = 0; i < DIRTAMOUNT; i++) {

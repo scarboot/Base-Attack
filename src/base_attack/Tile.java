@@ -2,8 +2,8 @@ package base_attack;
 
 public class Tile {
 	
-	int height, width;
-	TileType type;
+	private int height = 50, width = 50;
+	TileType type = TileType.STONE;
     Tower tower;
 
 	public int getHeight() {

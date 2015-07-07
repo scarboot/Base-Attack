@@ -7,8 +7,11 @@ public class Map {
 	Tile[][] fields;
 	List<Tower> towers = new ArrayList<Tower>();
 	
-	public Map(int height, int width) {
-		this.fields = new Tile[height][width];
+	public Map(int width, int height) {
+		this.fields = new Tile[width][height];
+		for(int x = 0; x < width; x++)
+			for(int y = 0; y < height; y++)
+				getTiles()[x][y] = new Tile();
 	}
 
 	public Tile[][] getTiles() {
@@ -16,7 +19,7 @@ public class Map {
 	}
 
 	public boolean setTile(int x, int y, TileType type){
-		if(fields[x][y] != null)
+		if(fields[x][y] == null)
 			return false;
 		fields[x][y].setType(type);
 		return true;
