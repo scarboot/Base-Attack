@@ -70,6 +70,9 @@ public class Frame extends JFrame {
 		
 		draw(g);
 		
+		g.dispose();
+		rootGraphics.dispose();
+		
 		strat.show();
 		
 	}

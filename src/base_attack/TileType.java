@@ -7,7 +7,7 @@ import base_attack.ui.Images;
 public enum TileType {
 	
 	GRASS(1),
-	STONE(Double.NaN),
+	STONE(1),
 	DIRT(0.75); //MAY BE CHANGED
 	
 	public final double WALK_SPEED_FACTOR;

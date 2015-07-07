@@ -17,7 +17,7 @@ public abstract class Mob implements Updateable {
 	
 	@Override
 	public void update(double t) {
-		getMovement().update(t);		
+		getMovement().update(t);
 	}
 
 	public Movement getMovement() {
@@ -26,6 +26,10 @@ public abstract class Mob implements Updateable {
 
 	public Image getImage() {
 		return image;
+	}
+
+	public boolean isDead() {
+		return getMovement().isFinished(); //TODO || health == 0;
 	}
 	
 }

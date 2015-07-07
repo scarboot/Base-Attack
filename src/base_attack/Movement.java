@@ -16,6 +16,9 @@ public class Movement implements Updateable {
 	@Override
 	public void update(double t) {
 		
+		if(isFinished())
+			return;
+		
 		progress += getLocalSpeedFactor() * t;
 		
 		while(progress >= seconds) {
@@ -24,6 +27,9 @@ public class Movement implements Updateable {
 			index++;
 			
 		}
+		
+		if(isFinished())
+			progress = 0;
 		
 	}
 
@@ -55,6 +61,10 @@ public class Movement implements Updateable {
 	
 	private double getPercentage() {
 		return progress/seconds;
+	}
+
+	public boolean isFinished() {
+		return index == path.getLength() - 1;
 	}
 
 }

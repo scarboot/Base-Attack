@@ -26,6 +26,28 @@ public class MapGenerator {
         for (int i = 0; i < X; i++) {
             newMap.setTile(i, Y/2, TileType.GRASS);
         }
+        
+        //TODO Set the mob path matching with the generated way above
+        newMap.setMobPath(new Path(
+        		new Tile[]{ //Horrible Code
+        				new Tile(15, Y/2), //The tile outside the map where they come from
+        				newMap.getTiles()[14][Y/2],
+        				newMap.getTiles()[13][Y/2],
+        				newMap.getTiles()[12][Y/2],
+        				newMap.getTiles()[11][Y/2],
+        				newMap.getTiles()[10][Y/2],
+        				newMap.getTiles()[9][Y/2],
+        				newMap.getTiles()[8][Y/2],
+        				newMap.getTiles()[7][Y/2],
+        				newMap.getTiles()[6][Y/2],
+        				newMap.getTiles()[5][Y/2],
+        				newMap.getTiles()[4][Y/2],
+        				newMap.getTiles()[3][Y/2],
+        				newMap.getTiles()[2][Y/2],
+        				newMap.getTiles()[1][Y/2],
+        				newMap.getTiles()[0][Y/2],
+        		}
+        		));
 
         //for (int i = 0; i < DIRTAMOUNT; i++) {
         //    newMap.setTile(random.nextInt(X), random.nextInt(Y), TileType.DIRT);

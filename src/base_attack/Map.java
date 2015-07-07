@@ -2,10 +2,11 @@ package base_attack;
 
 import java.util.*;
 
-public class Map {
+public class Map implements Updateable {
 	
 	private final Tile[][] fields;
 	private final List<Mob> mobs = new ArrayList<Mob>();
+	private Path mobPath;
 	
 	public Map(int width, int height) {
 		this.fields = new Tile[width][height];
@@ -34,5 +35,31 @@ public class Map {
 
 	public List<Mob> getMobs() {
 		return mobs;
+	}
+
+	public Path getMobPath() {
+		return mobPath;
+	}
+
+	public void setMobPath(Path mobPath) {
+		this.mobPath = mobPath;
+	}
+
+	@Override
+	public void update(double t) {
+		
+		final Iterator<Mob> mobIterator = mobs.iterator();
+		
+		while(mobIterator.hasNext()) {
+			
+			final Mob m = mobIterator.next();
+			
+			m.update(t);
+			
+			if(m.isDead())
+				mobIterator.remove();
+			
+		}
+		
 	}
 }

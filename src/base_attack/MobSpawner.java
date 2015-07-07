@@ -6,6 +6,7 @@ public class MobSpawner implements Updateable {
 	private final WaveStatsCalculator calc;
 	private double timePassed;
 	private double timePerSpawn;
+	private int spawned = 0;
 	
 	public MobSpawner(Game game) {
 		this.game = game;
@@ -14,6 +15,7 @@ public class MobSpawner implements Updateable {
 
 	@Override
 	public void update(double t) {
+		
 		calc.update(t);
 		
 		if(calc.isSpawning())
@@ -23,21 +25,24 @@ public class MobSpawner implements Updateable {
 	
 	private void updateSpawning(double t) {
 		
-		while(timePassed >= timePerSpawn) { //HUGE LAGS => while
+		timePassed += t;
+		
+		while(spawned < calc.mobs && timePassed >= timePerSpawn) { //HUGE LAGS => while
 			
 			timePassed -= timePerSpawn;
 			spawnMob();
+			spawned++;
 			
 		}
 		
 	}
 
 	private void spawnMob() {
-		// TODO
+		getGame().getMap().getMobs().add(new Minion(getGame().getMap().getMobPath()));
 	}
 
 	private void onNewWaveStart() {
-		timePerSpawn = calc.time / calc.mobs;
+		timePerSpawn = calc.spawningTime / calc.mobs;
 		timePassed = timePerSpawn/2; //FIRST MOBS SPAWNS EARLIER, LAST ONE DOES NOT SPAWN TOO LATE
 	}
 	
@@ -50,9 +55,8 @@ public class MobSpawner implements Updateable {
 		private int waves = -1;
 		
 		private boolean spawning = false;
-		private double time;
-		
-		private double spawningTime, pauseTime, mobs;
+		private double runningTimer, spawningTime, pauseTime;
+		private int mobs;
 		
 		private final int baseMobs, mobsPlus;
 		private final double baseTime, timePlus, basePause, pausePlus;
@@ -73,18 +77,18 @@ public class MobSpawner implements Updateable {
 		@Override
 		public void update(double t) {
 			
-			time += t;
+			runningTimer += t;
 			
-			if(spawning && time > spawningTime && !mobsLeft()) { //SPAWNING ENDS
+			if(spawning && runningTimer >= spawningTime && !mobsLeft()) { //SPAWNING ENDS
 				
 				spawning = false; //WAITING START
-				time = 0; //RESET TIMER
+				runningTimer = 0; //RESET TIMER
 				
-			} else if(!spawning && time > pauseTime) { //WAITING ENDS
+			} else if(!spawning && runningTimer >= pauseTime) { //WAITING ENDS
 				
 				spawning = true; //SPAWNING START
 				waves++; //NEST WAVE
-				time = 0; //RESET TIMER
+				runningTimer = 0; //RESET TIMER
 				calcTimes(); //CALC NEW TIMES
 				onNewWaveStart(); //TRIGGER EVENT
 				
