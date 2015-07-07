@@ -2,7 +2,7 @@ package base_attack;
 
 public class Game {
 	
-//	private final Map map = MapGenerator.generateMap();
+	private final Map map = MapGenerator.generateMap();
 	
 	public Game() {
 	}
@@ -13,8 +13,8 @@ public class Game {
 		Game game = new Game();
 	}
 	
-//	public Map getMap() {
-//		return map;
-//	}
+	public Map getMap() {
+		return map;
+	}
 	
 }
