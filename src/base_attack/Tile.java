@@ -1,6 +1,7 @@
 package base_attack;
 
 public class Tile {
+	TileType tileType;
 	int height, width;
 
 	public int getHeight() {
@@ -17,5 +18,9 @@ public class Tile {
 
 	public void setWidth(int width) {
 		this.width = width;
+	}
+
+	public TileType getTileType() {
+		return tileType;
 	}
 }
