@@ -10,4 +10,8 @@ public class Map {
 	public Map(int height, int width) {
 		this.fields = new Tile[height][width];
 	}
+
+	public Tile[][] getTiles() {
+		return fields;
+	}
 }

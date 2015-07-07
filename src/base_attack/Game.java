@@ -13,4 +13,8 @@ public class Game {
 		Game game = new Game();
 	}
 	
+	public Map getMap() {
+		return map;
+	}
+	
 }
