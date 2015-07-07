@@ -2,6 +2,8 @@ package base_attack;
 
 public class Tile {
 	int height, width;
+	TileType type;
+    Tower tower;
 
 	public int getHeight() {
 		return height;
@@ -18,4 +20,16 @@ public class Tile {
 	public void setWidth(int width) {
 		this.width = width;
 	}
+
+    public void setType(TileType type){
+        this.type = type;
+    }
+
+    public boolean hasTower() {
+        return tower != null;
+    }
+
+    public void setTower(Tower t) {
+        tower = t;
+    }
 }
