@@ -6,14 +6,20 @@ public class MobSpawner implements Updateable {
 	private final WaveStatsCalculator calc;
 	private double timePassed;
 	private double timePerSpawn;
+	private int spawned = 0;
 	
 	public MobSpawner(Game game) {
 		this.game = game;
-		this.calc = new WaveStatsCalculator(10, 2, 10, 1.5, 5, 2.5);
+		this.calc = new WaveStatsCalculator(
+				5, 2, 
+				10, 3.75/* not 4 => gets faster with every wave*/, 
+				5, 2);
+		calc.start();
 	}
 
 	@Override
 	public void update(double t) {
+		
 		calc.update(t);
 		
 		if(calc.isSpawning())
@@ -23,7 +29,9 @@ public class MobSpawner implements Updateable {
 	
 	private void updateSpawning(double t) {
 		
-		while(timePassed >= timePerSpawn) { //HUGE LAGS => while
+		timePassed += t;
+		
+		while(spawned < calc.mobs && timePassed >= timePerSpawn) { //HUGE LAGS => while
 			
 			timePassed -= timePerSpawn;
 			spawnMob();
@@ -33,16 +41,51 @@ public class MobSpawner implements Updateable {
 	}
 
 	private void spawnMob() {
-		// TODO
+		
+		getGame().getMap().getMobs().add(new Minion(getGame().getMap().getMobPath()));
+		spawned++;
+		
 	}
 
 	private void onNewWaveStart() {
-		timePerSpawn = calc.time / calc.mobs;
+		timePerSpawn = calc.spawningTime / calc.mobs;
 		timePassed = timePerSpawn/2; //FIRST MOBS SPAWNS EARLIER, LAST ONE DOES NOT SPAWN TOO LATE
+		spawned = 0;
 	}
 	
 	public Game getGame() {
 		return game;
+	}
+
+	public int getWave() {
+		return calc.waves;
+	}
+
+	public int getMobs() {
+		return calc.mobs;
+	}
+
+	public String formatTime() {
+		
+		if(calc.spawning)
+			return null;
+		
+		final double aim = calc.spawning ? calc.spawningTime : calc.pauseTime;
+		
+		final int time = (int) (aim - calc.runningTimer);
+		
+		if(time < 0)
+			throw new IllegalStateException();
+		
+		final int minutes = time/60;
+		final int seconds = time%60;
+		
+		return String.format("%02d:%02d", minutes, seconds);
+		
+	}
+
+	public boolean isPause() {
+		return !calc.spawning;
 	}
 	
 	private class WaveStatsCalculator implements Updateable {
@@ -50,9 +93,8 @@ public class MobSpawner implements Updateable {
 		private int waves = -1;
 		
 		private boolean spawning = false;
-		private double time;
-		
-		private double spawningTime, pauseTime, mobs;
+		private double runningTimer, spawningTime, pauseTime;
+		private int mobs;
 		
 		private final int baseMobs, mobsPlus;
 		private final double baseTime, timePlus, basePause, pausePlus;
@@ -66,35 +108,52 @@ public class MobSpawner implements Updateable {
 			this.basePause = basePause;
 			this.pausePlus = pausePlus;
 			
-			this.pauseTime = basePause;
-			
 		}
+		
+//		public WaveStatsCalculator(int baseMobs, int mobsPlus, double timePerMob, double basePause, double pausePlus) {
+//			this(baseMobs, mobsPlus, baseMobs*timePerMob, mobsPlus*timePerMob, basePause, pausePlus);			
+//		}
 
 		@Override
 		public void update(double t) {
 			
-			time += t;
+			if(waves == -1)
+				throw new IllegalStateException();
 			
-			if(spawning && time > spawningTime && !mobsLeft()) { //SPAWNING ENDS
+			runningTimer += t;
+			
+			if(spawning && runningTimer >= spawningTime && !mobsLeft()) { //SPAWNING ENDS
 				
 				spawning = false; //WAITING START
-				time = 0; //RESET TIMER
+				nextWave();
 				
-			} else if(!spawning && time > pauseTime) { //WAITING ENDS
+			} else if(!spawning && runningTimer >= pauseTime) { //WAITING ENDS
 				
 				spawning = true; //SPAWNING START
-				waves++; //NEST WAVE
-				time = 0; //RESET TIMER
-				calcTimes(); //CALC NEW TIMES
-				onNewWaveStart(); //TRIGGER EVENT
+				runningTimer = 0; //RESET TIMER
 				
 			}
 			
 		}
+		
+		public void start() {
+			
+			if(waves != -1)
+				throw new IllegalStateException();
+			
+			nextWave();
+
+		}
+		
+		private void nextWave() {
+			waves++; //NEST WAVE
+			runningTimer = 0; //RESET TIMER
+			calcTimes(); //CALC NEW TIMES
+			onNewWaveStart(); //TRIGGER EVENT
+		}
 
 		private boolean mobsLeft() {
-			//TODO
-			return true;
+			return !getGame().getMap().getMobs().isEmpty();
 		}
 
 		public void calcTimes() {
