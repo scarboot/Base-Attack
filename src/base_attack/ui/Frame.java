@@ -1,7 +1,7 @@
 package base_attack.ui;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
@@ -17,15 +17,23 @@ public class Frame extends JFrame {
 	
 	private final Game game;
 	private final BufferStrategy strat;
-	private final int width, height;
+	public final int width, height, gameHeight;
+	
+	private final TopDisplay topDisplay;
+	private final BotDisplay botDisplay;
 
-	public Frame(Game game, int width, int height) {
+	public Frame(Game game, int width, int gameHeight) {
 		
 		super("Base Attack");
 		
 		this.game = game;
+		
 		this.width = width;
-		this.height = height;
+		this.gameHeight = gameHeight;
+		this.height = TopDisplay.HEIGHT + gameHeight + BotDisplay.HEIGHT;
+		
+		this.topDisplay = new TopDisplay(this);
+		this.botDisplay = new BotDisplay(this);
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setFocusable(true);
@@ -63,10 +71,15 @@ public class Frame extends JFrame {
 	
 	public void draw() {
 		
-		final Graphics rootGraphics = strat.getDrawGraphics();
-		rootGraphics.create(getRootPane().getX(), getRootPane().getY(), width, height);
+		final Graphics2D rootGraphics = (Graphics2D) strat.getDrawGraphics();
 		
-		final Graphics2D g = (Graphics2D) rootGraphics.create(getRootPane().getX(), getRootPane().getY(), width, height);
+		rootGraphics.setFont(Display.FONT);
+		rootGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
+		rootGraphics.clearRect(0, 0, getWidth(), getHeight());
+		
+		final Graphics2D g = (Graphics2D) rootGraphics.create();
+		g.translate(getRootPane().getX(), getRootPane().getY());
 		
 		draw(g);
 		
@@ -78,6 +91,30 @@ public class Frame extends JFrame {
 	}
 	
 	private void draw(Graphics2D g) {
+		
+		Graphics2D subG;
+		
+		//Top display
+		subG = (Graphics2D) g.create(0, 0, width, TopDisplay.HEIGHT);
+		drawTopDisplay(subG);
+		
+		//Game
+		subG = (Graphics2D) g.create(0, TopDisplay.HEIGHT, width, gameHeight);
+		drawGame(subG);
+		
+		//Bottom menu
+		subG = (Graphics2D) g.create(0, TopDisplay.HEIGHT + gameHeight, width, BotDisplay.HEIGHT);
+		drawBotMenu(subG);
+		
+	}
+
+	private void drawTopDisplay(Graphics2D g) {
+		
+		topDisplay.draw(g);
+		
+	}
+
+	private void drawGame(Graphics2D g) {
 		
 		//Draw Tiles
 		
@@ -91,6 +128,12 @@ public class Frame extends JFrame {
 		
 		for(Mob m: game.getMap().getMobs())
 			drawMob(m, g);
+		
+	}
+	
+	private void drawBotMenu(Graphics2D g) {
+		
+		botDisplay.draw(g);
 		
 	}
 
@@ -118,6 +161,10 @@ public class Frame extends JFrame {
 		
 		g.drawImage(m.getImage(), x, y, null);
 		
+	}
+	
+	public Game getGame() {
+		return game;
 	}
 
 }

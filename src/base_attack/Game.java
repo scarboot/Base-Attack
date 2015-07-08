@@ -4,6 +4,7 @@ import base_attack.ui.Frame;
 
 public class Game implements Updateable {
 	
+	private int money = 0;
 	private final Map map = MapGenerator.generateMap();
 	private final MobSpawner spawner = new MobSpawner(this);
 	
@@ -16,8 +17,6 @@ public class Game implements Updateable {
 		
 		final Game game = new Game();
 		final Frame f = new Frame(game, MapGenerator.X*Tile.SIZE, MapGenerator.Y*Tile.SIZE);
-		
-		game.getMap().getMobs().add(new Minion(game.getMap().getMobPath()));
 		
 		long lastFrame = System.currentTimeMillis();
 		
@@ -47,6 +46,14 @@ public class Game implements Updateable {
 	public void update(double t) {
 		getMap().update(t);
 		getSpawner().update(t);
+	}
+
+	public int getMoney() {
+		return money;
+	}
+
+	public void setMoney(int money) {
+		this.money = money;
 	}
 	
 }
