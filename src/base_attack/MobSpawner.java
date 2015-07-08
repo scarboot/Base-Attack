@@ -31,19 +31,22 @@ public class MobSpawner implements Updateable {
 			
 			timePassed -= timePerSpawn;
 			spawnMob();
-			spawned++;
 			
 		}
 		
 	}
 
 	private void spawnMob() {
+		
 		getGame().getMap().getMobs().add(new Minion(getGame().getMap().getMobPath()));
+		spawned++;
+		
 	}
 
 	private void onNewWaveStart() {
 		timePerSpawn = calc.spawningTime / calc.mobs;
 		timePassed = timePerSpawn/2; //FIRST MOBS SPAWNS EARLIER, LAST ONE DOES NOT SPAWN TOO LATE
+		spawned = 0;
 	}
 	
 	public Game getGame() {
