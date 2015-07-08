@@ -37,9 +37,13 @@ public class MapGenerator {
         				newMap.getTiles()[11][Y/2],
         				newMap.getTiles()[10][Y/2],
         				newMap.getTiles()[9][Y/2],
-        				newMap.getTiles()[8][Y/2],
-        				newMap.getTiles()[7][Y/2],
-        				newMap.getTiles()[6][Y/2],
+        				//testing if corners work properly
+        				newMap.getTiles()[9][Y/2-1],
+        				newMap.getTiles()[8][Y/2-1],
+        				newMap.getTiles()[7][Y/2-1],
+        				newMap.getTiles()[6][Y/2-1],
+        				newMap.getTiles()[5][Y/2-1],
+        				//back to the straight street
         				newMap.getTiles()[5][Y/2],
         				newMap.getTiles()[4][Y/2],
         				newMap.getTiles()[3][Y/2],
@@ -48,6 +52,16 @@ public class MapGenerator {
         				newMap.getTiles()[0][Y/2],
         		}
         		));
+        
+        //displaying the tested corner street properly
+        
+        for(int x = 5; x <= 9; x++)
+        	newMap.getTiles()[x][Y/2-1].setType(TileType.GRASS);
+        
+        for(int x = 6; x <= 8; x++)
+        	newMap.getTiles()[x][Y/2].setType(TileType.STONE);
+        
+        //back to your code ;) (end of corner street)
 
         //for (int i = 0; i < DIRTAMOUNT; i++) {
         //    newMap.setTile(random.nextInt(X), random.nextInt(Y), TileType.DIRT);

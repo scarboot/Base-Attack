@@ -122,12 +122,18 @@ public class Frame extends JFrame {
 		
 		for(int x = 0; x < tiles.length; x++)
 			for(int y = 0; y < tiles[x].length; y++)
-				drawTile(tiles[x][y], x, y, g);
+				drawTile(tiles[x][y], g, false);
 		
 		//Draw Mobs
 		
 		for(Mob m: game.getMap().getMobs())
 			drawMob(m, g);
+		
+		//Draw Towers
+		
+		for(int x = 0; x < tiles.length; x++)
+			for(int y = 0; y < tiles[x].length; y++)
+				drawTile(tiles[x][y], g, true);
 		
 	}
 	
@@ -137,19 +143,20 @@ public class Frame extends JFrame {
 		
 	}
 
-	private void drawTile(Tile tile, int posX, int posY, Graphics2D g) {
+	private void drawTile(Tile tile, Graphics2D g, boolean drawTower) {
 		
 		final int
-		x = posX * Tile.SIZE,
-		y = posY * Tile.SIZE;
+		x = tile.x * Tile.SIZE,
+		y = tile.y * Tile.SIZE;
 		
 		//Draw TileType
 		
-		g.drawImage(tile.getType().IMAGE, x, y, null);
+		if(!drawTower)
+			g.drawImage(tile.getType().IMAGE, x, y, null);
 		
 		//Draw Tower
 		
-		if(tile.hasTower())
+		if(tile.hasTower() && drawTower)
 			g.drawImage(tile.getTower().getImage(), x, y, null);
 		
 	}

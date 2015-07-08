@@ -10,7 +10,10 @@ public class MobSpawner implements Updateable {
 	
 	public MobSpawner(Game game) {
 		this.game = game;
-		this.calc = new WaveStatsCalculator(10, 2, 10, 1.5, 5, 2.5);
+		this.calc = new WaveStatsCalculator(
+				5, 2, 
+				10, 3.75/* not 4 => gets faster with every wave*/, 
+				5, 2);
 		calc.start();
 	}
 
@@ -105,9 +108,11 @@ public class MobSpawner implements Updateable {
 			this.basePause = basePause;
 			this.pausePlus = pausePlus;
 			
-			this.pauseTime = basePause;
-			
 		}
+		
+//		public WaveStatsCalculator(int baseMobs, int mobsPlus, double timePerMob, double basePause, double pausePlus) {
+//			this(baseMobs, mobsPlus, baseMobs*timePerMob, mobsPlus*timePerMob, basePause, pausePlus);			
+//		}
 
 		@Override
 		public void update(double t) {
