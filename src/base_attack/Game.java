@@ -7,7 +7,7 @@ public class Game implements Updateable {
 	private int money = 0;
 	private final Map map;
 	private final MobSpawner spawner = new MobSpawner(this);
-	
+	public static Game game;
 	public Game() {
 		
 		{
@@ -56,7 +56,7 @@ public class Game implements Updateable {
 	
 	public static void main(String[] args) throws InterruptedException {
 		
-		final Game game = new Game();
+		game = new Game();
 		final Frame f = new Frame(game, MapGenerator.X*Tile.SIZE, MapGenerator.Y*Tile.SIZE);
 		
 		long lastFrame = System.currentTimeMillis();

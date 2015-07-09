@@ -34,7 +34,16 @@ public class Movement implements Updateable {
 	}
 
 	private double getLocalSpeedFactor() {
-		return getTile().getType().WALK_SPEED_FACTOR;
+		
+		final Tile t;
+		
+		if(isLastTile())
+			t = getTile();
+		else
+			t = getPercentage() < 0.5 ? getTile() : getNextTile();
+		
+		return t.getType().SPEED_FACTOR;
+		
 	}
 	
 	public PointDouble getExactLocation() {
@@ -59,11 +68,16 @@ public class Movement implements Updateable {
 	}
 
 	private Tile getTile() {
+		if(path.getTile(index).x >= 0 && path.getTile(index).x < 15 && path.getTile(index).y >= 0 && path.getTile(index).y < 9)
+		return Game.game.getMap().getTiles()[path.getTile(index).x][path.getTile(index).y];
 		return path.getTile(index);
 	}
 	
 	private Tile getNextTile() {
-		return path.getTile(index + 1);
+		int index = this.index + 1;
+		if(path.getTile(index).x >= 0 && path.getTile(index).x < 15 && path.getTile(index).y >= 0 && path.getTile(index).y < 9)
+		return Game.game.getMap().getTiles()[path.getTile(index).x][path.getTile(index).y];
+		return path.getTile(index);
 	}
 	
 	private double getPercentage() {
