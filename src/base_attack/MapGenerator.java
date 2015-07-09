@@ -1,6 +1,5 @@
 package base_attack;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
@@ -16,7 +15,7 @@ public class MapGenerator {
 
     public static Map generateMap(){
         Map newMap = new Map(X, Y);
-        List<Tile> way = new ArrayList<Tile>();
+        List<Tile> way = new ArrayList<>();
         
         for (int i = 0; i < X; i++) {
             for (int j = 0; j < Y; j++) {
@@ -25,7 +24,6 @@ public class MapGenerator {
             }
         }
 
-        //TODO Generating way properly, at the moment only straight street
         way.add(new Tile(0,Y/2));
         newMap.setTower(0,Y/2, new Base());
         // how many tiles uo or down
@@ -38,24 +36,53 @@ public class MapGenerator {
 			Tile lastPosition = way.get(way.size()-1);
 
             Tile[] possibleTiles = {
-                    new Tile(lastPosition.x+1, lastPosition.y), //right
+                    new Tile(lastPosition.x+2, lastPosition.y), //right
                     new Tile(lastPosition.x, lastPosition.y+1), //down
                     new Tile(lastPosition.x, lastPosition.y-1)  //up
             };
 
-            Tile nextTile = possibleTiles[random.nextInt(possibleTiles.length)];
+            int chosenTile = random.nextInt(possibleTiles.length);
+            Tile nextTile = possibleTiles[chosenTile];
 
-
-            if(nextTile.x == X){
+            //if end is reached: add last tile and exit, has to be at this position
+            if(nextTile.x == X - 1){
+                newMap.setTile(lastPosition.x+1, nextTile.y, TileType.GRASS);
+                way.add(new Tile(lastPosition.x+1, nextTile.y));
+                newMap.setTile(lastPosition.x+2, nextTile.y, TileType.GRASS);
+                way.add(new Tile(lastPosition.x+2, nextTile.y));
                 reached = true;
                 break;
             }
 
-            if(nextTile.y == Y){
-                if(random.nextBoolean())
+            // checking for walls (may be earlier)
+            if(nextTile.y == Y - 1){
+                if(random.nextBoolean()) {
+                    chosenTile = 0;
                     nextTile = possibleTiles[0];
-                else
+                }
+                else {
+                    chosenTile = 2;
                     nextTile = possibleTiles[2];
+                }
+            }
+
+            if(Math.abs(Y - nextTile.y) < 2) {
+                if(random.nextInt(nextTile.y) <= Y/2) {
+                    if(random.nextBoolean()) {
+                        chosenTile = 0;
+                        nextTile = possibleTiles[0];
+                    }
+                    else {
+                        chosenTile = 2;
+                        nextTile = possibleTiles[2];
+                    }
+                }
+            }
+
+            // Setting of the tiles between des 2nth next tile (see plus 2)
+            if(chosenTile == 0) {
+                newMap.setTile(nextTile.x-1, nextTile.y, TileType.GRASS);
+                way.add(new Tile(nextTile.x-1, nextTile.y));
             }
 
             if(nextTile.y == -1 || nextTile.x == -1)
@@ -64,10 +91,11 @@ public class MapGenerator {
             boolean alreadyUsed = newMap.getTiles()[nextTile.x][nextTile.y].getType() == TileType.GRASS || newMap.getTiles()[nextTile.x][nextTile.y].getType() == TileType.DIRT;
             boolean hasTower = newMap.getTiles()[nextTile.x][nextTile.y].hasTower();
 
+            // checking whether tile is free
             if(alreadyUsed || hasTower)
                 continue;
 
-
+            // adding new tile with  the certain probability of dirt
             boolean dirt = random.nextInt(DIRTAMOUNT) <= DIRTAMOUNT/2;
             TileType type = TileType.GRASS;
             if(dirt)
@@ -75,25 +103,13 @@ public class MapGenerator {
             newMap.setTile(nextTile.x, nextTile.y, type);
             way.add(new Tile(nextTile.x, nextTile.y));
 		}
-        Collections.reverse(way);
         newMap.setMobPath(Path.createReversedPath(way));
         return newMap;
     }
 
-    static boolean areNeighbours(Tile tile1, Tile tile2){
-        if(tile1.x == tile2.x && (tile1.y - tile2.y == 1 || tile2.y - tile1.y == 1)) //check for up and down
-            return true;
-        else if(tile1.x == tile2.x-1 && tile1.y == tile2.y) //check for right
-            return true;
-        return false;
-    }
-
-    public void dummyMap(){
         //for (int i = 0; i < X; i++) {
         //    newMap.setTile(i, Y/2, TileType.GRASS);
         //}
-
-        //TODO Set the mob path matching with the generated way above
 //        newMap.setMobPath(new Path(
 //        		new Tile[]{ //Horrible Code
 //        				new Tile(15, Y/2), //The tile outside the map where they come from
@@ -132,6 +148,5 @@ public class MapGenerator {
         //for (int i = 0; i < DIRTAMOUNT; i++) {
         //    newMap.setTile(random.nextInt(X), random.nextInt(Y), TileType.DIRT);
         //}
-    }
     
 }
