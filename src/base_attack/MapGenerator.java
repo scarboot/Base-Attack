@@ -39,24 +39,53 @@ public class MapGenerator {
 			Tile lastPosition = way.get(way.size()-1);
 
             Tile[] possibleTiles = {
-                    new Tile(lastPosition.x+1, lastPosition.y), //right
+                    new Tile(lastPosition.x+2, lastPosition.y), //right
                     new Tile(lastPosition.x, lastPosition.y+1), //down
                     new Tile(lastPosition.x, lastPosition.y-1)  //up
             };
 
-            Tile nextTile = possibleTiles[random.nextInt(possibleTiles.length)];
+            int chosenTile = random.nextInt(possibleTiles.length);
+            Tile nextTile = possibleTiles[chosenTile];
 
-
-            if(nextTile.x == X){
+            //if end is reached: add last tile and exit, has to be at this position
+            if(nextTile.x == X - 1){
+                newMap.setTile(lastPosition.x+1, nextTile.y, TileType.GRASS);
+                way.add(new Tile(lastPosition.x+1, nextTile.y));
+                newMap.setTile(lastPosition.x+2, nextTile.y, TileType.GRASS);
+                way.add(new Tile(lastPosition.x+2, nextTile.y));
                 reached = true;
                 break;
             }
 
-            if(nextTile.y == Y){
-                if(random.nextBoolean())
+            // checking for walls (may be earlier)
+            if(nextTile.y == Y - 1){
+                if(random.nextBoolean()) {
+                    chosenTile = 0;
                     nextTile = possibleTiles[0];
-                else
+                }
+                else {
+                    chosenTile = 2;
                     nextTile = possibleTiles[2];
+                }
+            }
+
+            if(Math.abs(Y - nextTile.y) < 2) {
+                if(random.nextInt(nextTile.y) <= Y/2) {
+                    if(random.nextBoolean()) {
+                        chosenTile = 0;
+                        nextTile = possibleTiles[0];
+                    }
+                    else {
+                        chosenTile = 2;
+                        nextTile = possibleTiles[2];
+                    }
+                }
+            }
+
+            // Setting of the tiles between des 2nth next tile (see plus 2)
+            if(chosenTile == 0) {
+                newMap.setTile(nextTile.x-1, nextTile.y, TileType.GRASS);
+                way.add(new Tile(nextTile.x-1, nextTile.y));
             }
 
             if(nextTile.y == -1 || nextTile.x == -1)
@@ -65,10 +94,11 @@ public class MapGenerator {
             boolean alreadyUsed = newMap.getTiles()[nextTile.x][nextTile.y].getType() == TileType.GRASS || newMap.getTiles()[nextTile.x][nextTile.y].getType() == TileType.DIRT;
             boolean hasTower = newMap.getTiles()[nextTile.x][nextTile.y].hasTower();
 
+            // checking whether tile is free
             if(alreadyUsed || hasTower)
                 continue;
 
-
+            // adding new tile with  the certain probability of dirt
             boolean dirt = random.nextInt(DIRTAMOUNT) <= DIRTAMOUNT/2;
             TileType type = TileType.GRASS;
             if(dirt)
@@ -76,7 +106,6 @@ public class MapGenerator {
             newMap.setTile(nextTile.x, nextTile.y, type);
             way.add(new Tile(nextTile.x, nextTile.y));
 		}
-        Collections.reverse(way);
         newMap.setMobPath(Path.createReversedPath(way));
         return newMap;
     }
