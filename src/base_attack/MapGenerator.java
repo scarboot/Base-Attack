@@ -108,8 +108,8 @@ public class MapGenerator {
             }
             newMap.setTile(nextTile.x, nextTile.y, type);
             way.add(new Tile(nextTile.x, nextTile.y));
-		}
-        way.add(new Tile(X+1, way.get(way.size()-1).y));
+		}//Lukas: Added TileType.GRASS instead of the default STONE and changed X+1 to X
+        way.add(new Tile(TileType.GRASS, X, way.get(way.size()-1).y));
         newMap.setMobPath(Path.createReversedPath(way));
         return newMap;
     }
