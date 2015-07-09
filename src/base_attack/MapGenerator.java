@@ -10,13 +10,13 @@ import java.util.Random;
  */
 public class MapGenerator {
 
-    public static final int X = 15, Y = 9, DIRTAMOUNT = 40; //DIRTAMAOUNT IN REVERSE PERCENT
+    public static final int X = 15, Y = 9, DIRTAMOUNT = 3; //DIRTAMAOUNT IN REVERSE PERCENT
     public static Random random = new Random();
 
     public static Map generateMap(){
         Map newMap = new Map(X, Y);
         List<Tile> way = new ArrayList<>();
-        
+
         for (int i = 0; i < X; i++) {
             for (int j = 0; j < Y; j++) {
                 // Filling everything with stones
@@ -30,6 +30,7 @@ public class MapGenerator {
         // which direction
         // when to go to the next column
 
+        int dirtGroupBorder = 0;
         while(true) {
 
 			Tile lastPosition = way.get(way.size()-1);
@@ -94,10 +95,17 @@ public class MapGenerator {
                 continue;
 
             // adding new tile with  the certain probability of dirt
-            boolean dirt = random.nextInt(DIRTAMOUNT) <= DIRTAMOUNT/2;
-            TileType type = TileType.GRASS;
-            if(dirt)
+            TileType type;
+            if(random.nextInt(100) > 90 && dirtGroupBorder == 0) {
+                dirtGroupBorder = DIRTAMOUNT;
+            }
+            if(dirtGroupBorder > 0) {
                 type = TileType.DIRT;
+                dirtGroupBorder--;
+            }
+            else {
+                type = TileType.GRASS;
+            }
             newMap.setTile(nextTile.x, nextTile.y, type);
             way.add(new Tile(nextTile.x, nextTile.y));
 		}
