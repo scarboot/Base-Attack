@@ -10,7 +10,7 @@ import java.util.Random;
  */
 public class MapGenerator {
 
-    public static final int X = 15, Y = 9, DIRTAMOUNT = 20; //DIRTAMAOUNT IN PERCENT
+    public static final int X = 15, Y = 9, DIRTAMOUNT = 40; //DIRTAMAOUNT IN REVERSE PERCENT
     public static Random random = new Random();
 
     public static Map generateMap(){
@@ -30,8 +30,7 @@ public class MapGenerator {
         // which direction
         // when to go to the next column
 
-        boolean reached = false;
-        while(!reached) {
+        while(true) {
 
 			Tile lastPosition = way.get(way.size()-1);
 
@@ -50,7 +49,6 @@ public class MapGenerator {
                 way.add(new Tile(lastPosition.x+1, nextTile.y));
                 newMap.setTile(lastPosition.x+2, nextTile.y, TileType.GRASS);
                 way.add(new Tile(lastPosition.x+2, nextTile.y));
-                reached = true;
                 break;
             }
 
