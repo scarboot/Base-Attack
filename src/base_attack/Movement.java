@@ -39,6 +39,9 @@ public class Movement implements Updateable {
 	
 	public PointDouble getExactLocation() {
 		
+		if(isFinished() || isLastTile())
+			return new PointDouble(getTile().x, getTile().y);
+		
 		double
 		x1 = getTile().x,
 		y1 = getTile().y,
@@ -49,6 +52,10 @@ public class Movement implements Updateable {
 		
 		return new PointDouble(x1 + deltaX*getPercentage(), y1 + deltaY*getPercentage());
 		
+	}
+
+	private boolean isLastTile() {
+		return index == path.getLength() - 1;
 	}
 
 	private Tile getTile() {

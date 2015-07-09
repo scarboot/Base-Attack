@@ -6,9 +6,21 @@ package base_attack;
  */
 public class Base extends Tower {
 
+	public Base(Game game, Tile tile) {
+		super(game, tile, Double.POSITIVE_INFINITY, 0);
+	}
+
+	public Base() {
+		this(null, null);
+	}
+
 	@Override
 	public void update(double t) {
-		
 	}
-    //TODO
+	
+	@Override
+	public boolean shoot() {
+		throw new UnsupportedOperationException();
+	}
+	
 }

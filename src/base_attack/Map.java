@@ -6,6 +6,7 @@ public class Map implements Updateable {
 	
 	private final Tile[][] fields;
 	private final List<Mob> mobs = new ArrayList<Mob>();
+	private final List<Bullet> bullets = new ArrayList<Bullet>();
 	private Path mobPath;
 	
 	public Map(int width, int height) {
@@ -48,18 +49,49 @@ public class Map implements Updateable {
 	@Override
 	public void update(double t) {
 		
-		final Iterator<Mob> mobIterator = mobs.iterator();
-		
-		while(mobIterator.hasNext()) {
+		{//UPDATE TOWERS
 			
-			final Mob m = mobIterator.next();
-			
-			m.update(t);
-			
-			if(m.isDead())
-				mobIterator.remove();
+			for(Tile[] tiles: getTiles()) for(Tile tile: tiles)
+				if(tile.hasTower())
+					tile.getTower().update(t);
 			
 		}
 		
+		{//UPDATE BULLETS
+			
+			final Iterator<Bullet> it = getBullets().iterator();
+			
+			while(it.hasNext()) {
+				
+				final Bullet b = it.next();
+				
+				if(b.update(t))
+					it.remove();
+				
+			}
+			
+		}
+		
+		{//UPDATE MOBS
+			
+			final Iterator<Mob> it = getMobs().iterator();
+			
+			while(it.hasNext()) {
+				
+				final Mob m = it.next();
+				
+				m.update(t);
+				
+				if(m.isDead())
+					it.remove();
+				
+			}
+			
+		}
+		
+	}
+
+	public List<Bullet> getBullets() {
+		return bullets;
 	}
 }

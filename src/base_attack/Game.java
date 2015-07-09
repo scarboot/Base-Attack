@@ -9,6 +9,30 @@ public class Game implements Updateable {
 	private final MobSpawner spawner = new MobSpawner(this);
 	
 	public Game() {
+		getMap().getTiles()[15/2+3][9/2-1].setTower(new SlingTower(this, getMap().getTiles()[15/2+3][9/2-1]));
+		getMap().getTiles()[15/2+1][9/2].setTower(new SlingTower(this, getMap().getTiles()[15/2+1][9/2]));
+	}
+
+	@Override
+	public void update(double t) {
+		getMap().update(t);
+		getSpawner().update(t);
+	}
+	
+	public Map getMap() {
+		return map;
+	}
+
+	public MobSpawner getSpawner() {
+		return spawner;
+	}
+
+	public int getMoney() {
+		return money;
+	}
+
+	public void setMoney(int money) {
+		this.money = money;
 	}
 	
 	// End of useful code / main
@@ -32,28 +56,6 @@ public class Game implements Updateable {
 			
 		}
 		
-	}
-	
-	public Map getMap() {
-		return map;
-	}
-
-	public MobSpawner getSpawner() {
-		return spawner;
-	}
-
-	@Override
-	public void update(double t) {
-		getMap().update(t);
-		getSpawner().update(t);
-	}
-
-	public int getMoney() {
-		return money;
-	}
-
-	public void setMoney(int money) {
-		this.money = money;
 	}
 	
 }

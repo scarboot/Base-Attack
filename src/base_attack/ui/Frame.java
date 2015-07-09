@@ -6,6 +6,7 @@ import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
+import base_attack.Bullet;
 import base_attack.Game;
 import base_attack.Mob;
 import base_attack.PointDouble;
@@ -134,6 +135,11 @@ public class Frame extends JFrame {
 		for(int x = 0; x < tiles.length; x++)
 			for(int y = 0; y < tiles[x].length; y++)
 				drawTile(tiles[x][y], g, true);
+		
+		//Draw Bullets
+		
+		for(Bullet b: getGame().getMap().getBullets())
+			b.draw(g);
 		
 	}
 	
