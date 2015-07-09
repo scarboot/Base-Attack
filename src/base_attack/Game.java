@@ -9,8 +9,8 @@ public class Game implements Updateable {
 	private final MobSpawner spawner = new MobSpawner(this);
 	
 	public Game() {
-		getMap().getTiles()[15/2+3][9/2-1].setTower(new SlingTower(this, getMap().getTiles()[15/2+3][9/2-1]));
-		getMap().getTiles()[15/2+1][9/2].setTower(new SlingTower(this, getMap().getTiles()[15/2+1][9/2]));
+//		getMap().getTiles()[15/2+3][9/2-1].setTower(new SlingTower(this, getMap().getTiles()[15/2+3][9/2-1]));
+//		getMap().getTiles()[15/2+1][9/2].setTower(new SlingTower(this, getMap().getTiles()[15/2+1][9/2]));
 	}
 
 	@Override
