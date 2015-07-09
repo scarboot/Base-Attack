@@ -49,16 +49,43 @@ public class Map implements Updateable {
 	@Override
 	public void update(double t) {
 		
-		final Iterator<Mob> mobIterator = mobs.iterator();
+		{//UPDATE TOWERS
+			
+			for(Tile[] tiles: getTiles()) for(Tile tile: tiles)
+				if(tile.hasTower())
+					tile.getTower().update(t);
+			
+		}
 		
-		while(mobIterator.hasNext()) {
+		{//UPDATE BULLETS
 			
-			final Mob m = mobIterator.next();
+			final Iterator<Bullet> it = getBullets().iterator();
 			
-			m.update(t);
+			while(it.hasNext()) {
+				
+				final Bullet b = it.next();
+				
+				if(b.update(t))
+					it.remove();
+				
+			}
 			
-			if(m.isDead())
-				mobIterator.remove();
+		}
+		
+		{//UPDATE MOBS
+			
+			final Iterator<Mob> it = getMobs().iterator();
+			
+			while(it.hasNext()) {
+				
+				final Mob m = it.next();
+				
+				m.update(t);
+				
+				if(m.isDead())
+					it.remove();
+				
+			}
 			
 		}
 		

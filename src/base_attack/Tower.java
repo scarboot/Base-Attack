@@ -61,14 +61,19 @@ public abstract class Tower implements Updateable {
 	
 	public Mob findMob() {
 		
-		double bestDistanceSq = Double.NEGATIVE_INFINITY;
+		final double maxDistanceSq = Math.pow(getRadius(), 2);
+		
+		double bestDistanceSq = Double.POSITIVE_INFINITY;
 		Mob bestMob = null;
 		
 		for(Mob m: getGame().getMap().getMobs()) {
 			
 			final double distanceSq = m.getLocation().distanceSq(getTile().x, getTile().y);
 			
-			if(distanceSq > bestDistanceSq) {
+			if(distanceSq > maxDistanceSq)
+				continue;
+			
+			if(distanceSq < bestDistanceSq) {
 				bestDistanceSq = distanceSq;
 				bestMob = m;
 			}

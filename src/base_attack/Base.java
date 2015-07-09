@@ -10,12 +10,17 @@ public class Base extends Tower {
 		super(game, tile, Double.POSITIVE_INFINITY, 0);
 	}
 
+	public Base() {
+		this(null, null);
+	}
+
 	@Override
 	public void update(double t) {
 	}
 	
 	@Override
-	public void shoot() {
+	public boolean shoot() {
+		throw new UnsupportedOperationException();
 	}
 	
 }
