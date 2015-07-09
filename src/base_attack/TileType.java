@@ -8,13 +8,13 @@ public enum TileType {
 	
 	GRASS(1),
 	STONE(1),
-	DIRT(0.75); //MAY BE CHANGED
+	DIRT(0.7); //MAY BE CHANGED
 	
-	public final double WALK_SPEED_FACTOR;
+	public final double SPEED_FACTOR;
 	public final BufferedImage IMAGE;
 	
-	private TileType(double walkSpeedFactor){
-		WALK_SPEED_FACTOR = walkSpeedFactor;
+	private TileType(double speedFactor){
+		SPEED_FACTOR = speedFactor;
 		IMAGE = Images.loadImage(toString());
 	}
 	
