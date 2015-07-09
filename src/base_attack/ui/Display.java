@@ -8,25 +8,41 @@ import base_attack.Game;
 
 public class Display {
 	
+	//CONSTANTS
+	
 	public static final int
-	HEIGHT_INTERNAL = 60,
 	BORDER = 3,
-	HEIGHT = HEIGHT_INTERNAL + BORDER,
-	FONT_HEIGHT = HEIGHT_INTERNAL*2/3,
-	GAP = HEIGHT_INTERNAL/6,
-	SPACE = HEIGHT_INTERNAL + GAP,
-	FONT_WIDTH = FONT_HEIGHT*2/3,
-	MIDDLE = HEIGHT_INTERNAL/2;
+	GAP = 10;
+	
+	//FONT STUFF
+	
+	public static final int
+	FONT_HEIGHT = 60*2/3,
+	FONT_WIDTH = FONT_HEIGHT*2/3;
 	
 	public static final double
 	fontHeightActual = FONT_HEIGHT*2/3d;
 	
 	public static final Font FONT = new Font("Arial", Font.PLAIN, FONT_HEIGHT);
 	
+	//REAL CONTENT
+	
 	private final Frame frame;
 	
-	public Display(Frame frame) {
+	public final int
+	space,
+	heightInternal,
+	totalHeight;
+	
+	public Display(Frame frame, int heightInternal) {
 		this.frame = frame;
+		this.heightInternal = heightInternal;
+		this.space = heightInternal + GAP;
+		this.totalHeight = heightInternal + BORDER;
+	}
+	
+	public Display(Frame frame) {
+		this(frame, 60);
 	}
 
 	public Frame getFrame() {
@@ -46,20 +62,37 @@ public class Display {
 	}
 
 	public static void drawInCenter(Graphics2D g, BufferedImage image, int x, int y, int height, int width) {
+		drawCentered(g, image, x + width/2, y + height/2);
 		
-		x += center(width, image.getWidth());
-		y += center(height, image.getHeight());
+	}
+
+	public void drawInCenter(Graphics2D g, BufferedImage image, int x, int y) {
+		drawInCenter(g, image, x, y, height(), height());
+	}
+	
+	public static void drawCentered(Graphics2D g, BufferedImage image, int middleX, int middleY) {
+		
+		final int x = middleX - image.getWidth()/2;
+		final int y = middleY - image.getHeight()/2;
 		
 		g.drawImage(image, x, y, null);
 		
 	}
-
-	public static void drawInCenter(Graphics2D g, BufferedImage image, int x, int y) {
-		drawInCenter(g, image, x, y, HEIGHT_INTERNAL, HEIGHT_INTERNAL);
+	
+	public int height() {
+		return heightInternal;
 	}
-
-	private static int center(int height, int fitIntoHeight) {
-		return (height - fitIntoHeight)/2;
+	
+	public int getTotalHeight() {
+		return totalHeight;
+	}
+	
+	public int space() {
+		return space;
+	}
+	
+	public int middle() {
+		return height()/2;
 	}
 
 }

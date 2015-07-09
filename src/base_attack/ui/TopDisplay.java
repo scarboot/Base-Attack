@@ -12,7 +12,7 @@ public class TopDisplay extends Display {
 	fight = Images.loadImage("Fight");
 	
 	public TopDisplay(Frame f) {
-		super(f);
+		super(f, 60);
 	}
 	
 	public void draw(Graphics2D g) {
@@ -20,25 +20,25 @@ public class TopDisplay extends Display {
 		drawBorder(g);
 		
 		//DRAW MONEY
-		drawInCenter(g, money, 0, 0, HEIGHT_INTERNAL, HEIGHT_INTERNAL);
-		drawString(g, String.valueOf(getGame().getMoney()), SPACE, MIDDLE);
+		drawInCenter(g, money, 0, 0, height(), height());
+		drawString(g, String.valueOf(getGame().getMoney()), space(), middle());
 		
 		g.setColor(getGame().getSpawner().isPause() ? Color.BLACK : Color.RED);
 		
 		//DRAW WAVE
-		drawString(g, "Wave " + (getGame().getSpawner().getWave() + 1), SPACE + FONT_WIDTH*8 + GAP , MIDDLE);
+		drawString(g, "Wave " + (getGame().getSpawner().getWave() + 1), space() + FONT_WIDTH*8 + GAP , middle());
 		
 		g.setColor(Color.BLACK);
 		
 		//DRAW MOBS
 		if(getGame().getSpawner().isPause()) {
 			
-			drawInCenter(g, clock, getFrame().width - SPACE, 0, HEIGHT_INTERNAL, HEIGHT_INTERNAL);
-			drawString(g, getGame().getSpawner().formatTime(), getFrame().width - (SPACE + FONT_WIDTH*4), MIDDLE);
+			drawInCenter(g, clock, getFrame().width - space(), 0, height(), height());
+			drawString(g, getGame().getSpawner().formatTime(), getFrame().width - (space() + FONT_WIDTH*4), middle());
 			
 		} else {
 			
-			drawInCenter(g, fight, getFrame().width - SPACE, 0, HEIGHT_INTERNAL, HEIGHT_INTERNAL);
+			drawInCenter(g, fight, getFrame().width - space(), 0, height(), height());
 			
 		}
 		
@@ -47,7 +47,7 @@ public class TopDisplay extends Display {
 	private void drawBorder(Graphics2D g) {
 		
 		g.setColor(Color.BLACK);
-		g.fillRect(0, HEIGHT_INTERNAL, getFrame().width, BORDER);
+		g.fillRect(0, height(), getFrame().width, BORDER);
 
 	}
 

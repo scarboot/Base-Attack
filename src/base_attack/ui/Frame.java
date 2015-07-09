@@ -29,12 +29,12 @@ public class Frame extends JFrame {
 		
 		this.game = game;
 		
-		this.width = width;
-		this.gameHeight = gameHeight;
-		this.height = TopDisplay.HEIGHT + gameHeight + BotDisplay.HEIGHT;
-		
 		this.topDisplay = new TopDisplay(this);
 		this.botDisplay = new BotDisplay(this);
+		
+		this.width = width;
+		this.gameHeight = gameHeight;
+		this.height = topDisplay.getTotalHeight() + gameHeight + botDisplay.getTotalHeight();
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setFocusable(true);
@@ -96,15 +96,15 @@ public class Frame extends JFrame {
 		Graphics2D subG;
 		
 		//Top display
-		subG = (Graphics2D) g.create(0, 0, width, TopDisplay.HEIGHT);
+		subG = (Graphics2D) g.create(0, 0, width, topDisplay.getTotalHeight());
 		drawTopDisplay(subG);
 		
 		//Game
-		subG = (Graphics2D) g.create(0, TopDisplay.HEIGHT, width, gameHeight);
+		subG = (Graphics2D) g.create(0, topDisplay.getTotalHeight(), width, gameHeight);
 		drawGame(subG);
 		
 		//Bottom menu
-		subG = (Graphics2D) g.create(0, TopDisplay.HEIGHT + gameHeight, width, BotDisplay.HEIGHT);
+		subG = (Graphics2D) g.create(0, topDisplay.getTotalHeight() + gameHeight, width, botDisplay.getTotalHeight());
 		drawBotMenu(subG);
 		
 	}
