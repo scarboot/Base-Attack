@@ -5,10 +5,27 @@ import base_attack.ui.Frame;
 public class Game implements Updateable {
 	
 	private int money = 0;
-	private final Map map = MapGenerator.generateMap();
+	private final Map map;
 	private final MobSpawner spawner = new MobSpawner(this);
 	
 	public Game() {
+		
+		{
+			
+			Map m = null;
+			
+			while(m == null) {
+				try {
+					m = MapGenerator.generateMap();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			this.map = m;
+			
+		}
+		
 //		getMap().getTiles()[15/2+3][9/2-1].setTower(new SlingTower(this, getMap().getTiles()[15/2+3][9/2-1]));
 //		getMap().getTiles()[15/2+1][9/2].setTower(new SlingTower(this, getMap().getTiles()[15/2+1][9/2]));
 	}
