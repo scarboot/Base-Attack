@@ -1,5 +1,6 @@
 package base_attack;
 
+import java.util.Collections;
 import java.util.List;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.Random;
  */
 public class MapGenerator {
 
-    public static final int X = 15, Y = 9, DIRTAMOUNT = 10;
+    public static final int X = 15, Y = 9, DIRTAMOUNT = 20; //DIRTAMAOUNT IN PERCENT
     public static Random random = new Random();
 
     public static Map generateMap(){
@@ -31,34 +32,68 @@ public class MapGenerator {
         // how many tiles uo or down
         // which direction
         // when to go to the next column
-        
-        for (int i = 0; i < X; i++) {
-			boolean upDown = random.nextBoolean();
-			int upDownAmount = random.nextInt(Y);
-			
+
+        boolean reached = false;
+        while(!reached) {
+
 			Tile lastPosition = way.get(way.size()-1);
-			
-			boolean up = true;
-			boolean down = true;
-			boolean right = true;
-			
-			// Setting wether up, down or right are already set, true = empty
-			for (Tile t : way) {
-				if(t.x == lastPosition.x && Math.abs(t.y - lastPosition.y) == 1) 
-					if(t.y - lastPosition.y < 0)
-						up = false;
-					else
-						down = false;
-				else if(t.x == lastPosition.x+1 && t.y == lastPosition.y)
-					right = false;
-			}
-			
+
+            Tile[] possibleTiles = {
+                    new Tile(lastPosition.x+1, lastPosition.y), //right
+                    new Tile(lastPosition.x, lastPosition.y+1), //down
+                    new Tile(lastPosition.x, lastPosition.y-1)  //up
+            };
+
+            Tile nextTile = possibleTiles[random.nextInt(possibleTiles.length)];
+
+
+            if(nextTile.x == X){
+                reached = true;
+                break;
+            }
+
+            if(nextTile.y == Y){
+                if(random.nextBoolean())
+                    nextTile = possibleTiles[0];
+                else
+                    nextTile = possibleTiles[2];
+            }
+
+            if(nextTile.y == -1 || nextTile.x == -1)
+                continue;
+
+            boolean alreadyUsed = newMap.getTiles()[nextTile.x][nextTile.y].getType() == TileType.GRASS || newMap.getTiles()[nextTile.x][nextTile.y].getType() == TileType.DIRT;
+            boolean hasTower = newMap.getTiles()[nextTile.x][nextTile.y].hasTower();
+
+            if(alreadyUsed || hasTower)
+                continue;
+
+
+            boolean dirt = random.nextInt(DIRTAMOUNT) <= DIRTAMOUNT/2;
+            TileType type = TileType.GRASS;
+            if(dirt)
+                type = TileType.DIRT;
+            newMap.setTile(nextTile.x, nextTile.y, type);
+            way.add(new Tile(nextTile.x, nextTile.y));
 		}
-        
-        for (int i = 0; i < X; i++) {
-            newMap.setTile(i, Y/2, TileType.GRASS);
-        }
-        
+        Collections.reverse(way);
+        newMap.setMobPath(Path.createReversedPath(way));
+        return newMap;
+    }
+
+    static boolean areNeighbours(Tile tile1, Tile tile2){
+        if(tile1.x == tile2.x && (tile1.y - tile2.y == 1 || tile2.y - tile1.y == 1)) //check for up and down
+            return true;
+        else if(tile1.x == tile2.x-1 && tile1.y == tile2.y) //check for right
+            return true;
+        return false;
+    }
+
+    public void dummyMap(){
+        //for (int i = 0; i < X; i++) {
+        //    newMap.setTile(i, Y/2, TileType.GRASS);
+        //}
+
         //TODO Set the mob path matching with the generated way above
 //        newMap.setMobPath(new Path(
 //        		new Tile[]{ //Horrible Code
@@ -84,22 +119,20 @@ public class MapGenerator {
 //        				newMap.getTiles()[0][Y/2],
 //        		}
 //        		));
-        
+
         //displaying the tested corner street properly
-        
-        for(int x = 5; x <= 9; x++)
-        	newMap.getTiles()[x][Y/2-1].setType(TileType.GRASS);
-        
-        for(int x = 6; x <= 8; x++)
-        	newMap.getTiles()[x][Y/2].setType(TileType.STONE);
-        
+
+        //for(int x = 5; x <= 9; x++)
+        //	newMap.getTiles()[x][Y/2-1].setType(TileType.GRASS);
+
+        //for(int x = 6; x <= 8; x++)
+        //	newMap.getTiles()[x][Y/2].setType(TileType.STONE);
+
         //back to your code ;) (end of corner street)
 
         //for (int i = 0; i < DIRTAMOUNT; i++) {
         //    newMap.setTile(random.nextInt(X), random.nextInt(Y), TileType.DIRT);
         //}
-
-        return newMap;
     }
     
 }
