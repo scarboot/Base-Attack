@@ -1,8 +1,6 @@
 package base_attack;
 
-import java.util.Collections;
 import java.util.List;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -17,7 +15,7 @@ public class MapGenerator {
 
     public static Map generateMap(){
         Map newMap = new Map(X, Y);
-        List<Tile> way = new ArrayList<Tile>();
+        List<Tile> way = new ArrayList<>();
         
         for (int i = 0; i < X; i++) {
             for (int j = 0; j < Y; j++) {
@@ -26,7 +24,6 @@ public class MapGenerator {
             }
         }
 
-        //TODO Generating way properly, at the moment only straight street
         way.add(new Tile(0,Y/2));
         newMap.setTower(0,Y/2, new Base());
         // how many tiles uo or down
@@ -110,20 +107,9 @@ public class MapGenerator {
         return newMap;
     }
 
-    static boolean areNeighbours(Tile tile1, Tile tile2){
-        if(tile1.x == tile2.x && (tile1.y - tile2.y == 1 || tile2.y - tile1.y == 1)) //check for up and down
-            return true;
-        else if(tile1.x == tile2.x-1 && tile1.y == tile2.y) //check for right
-            return true;
-        return false;
-    }
-
-    public void dummyMap(){
         //for (int i = 0; i < X; i++) {
         //    newMap.setTile(i, Y/2, TileType.GRASS);
         //}
-
-        //TODO Set the mob path matching with the generated way above
 //        newMap.setMobPath(new Path(
 //        		new Tile[]{ //Horrible Code
 //        				new Tile(15, Y/2), //The tile outside the map where they come from
@@ -162,6 +148,5 @@ public class MapGenerator {
         //for (int i = 0; i < DIRTAMOUNT; i++) {
         //    newMap.setTile(random.nextInt(X), random.nextInt(Y), TileType.DIRT);
         //}
-    }
     
 }
