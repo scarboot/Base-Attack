@@ -6,6 +6,7 @@ public class Map implements Updateable {
 	
 	private final Tile[][] fields;
 	private final List<Mob> mobs = new ArrayList<Mob>();
+	private final List<Bullet> bullets = new ArrayList<Bullet>();
 	private Path mobPath;
 	
 	public Map(int width, int height) {
@@ -61,5 +62,9 @@ public class Map implements Updateable {
 			
 		}
 		
+	}
+
+	public List<Bullet> getBullets() {
+		return bullets;
 	}
 }

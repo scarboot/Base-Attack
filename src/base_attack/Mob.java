@@ -31,5 +31,9 @@ public abstract class Mob implements Updateable {
 	public boolean isDead() {
 		return getMovement().isFinished(); //TODO || health == 0;
 	}
+
+	public PointDouble getLocation() {
+		return getMovement().getExactLocation();
+	}
 	
 }
