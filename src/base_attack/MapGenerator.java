@@ -2,7 +2,6 @@ package base_attack;
 
 import java.util.Collections;
 import java.util.List;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
