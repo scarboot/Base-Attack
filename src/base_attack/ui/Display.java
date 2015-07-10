@@ -5,8 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import base_attack.Game;
+import base_attack.Updateable;
 
-public class Display {
+public class Display implements Updateable {
 	
 	//CONSTANTS
 	
@@ -97,6 +98,10 @@ public class Display {
 
 	public static void drawInCenter(Graphics2D g, BufferedImage image, int height) {
 		drawInCenter(g, image, 0, 0, height, height);		
+	}
+
+	@Override
+	public void update(double t) {
 	}
 
 }

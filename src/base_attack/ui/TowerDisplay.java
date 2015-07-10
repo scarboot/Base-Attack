@@ -3,6 +3,7 @@ package base_attack.ui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 import base_attack.TowerMeta;
@@ -55,6 +56,8 @@ public class TowerDisplay extends Container {
 		
 		{//NAME
 			
+			g.setColor(meta.getColor().darker());
+			
 			drawString(g, meta.getName(), 0, FONT_HEIGHT_AND_GAP/2);
 			
 			g.translate(0, FONT_HEIGHT_AND_GAP); //TRANSLATE
@@ -102,6 +105,13 @@ public class TowerDisplay extends Container {
 		final int y = (int) (middleY + fontHeightActual/2);
 		
 		g.drawString(String.valueOf(o), x, y);
+		
+	}
+
+	public void update(double t) {
+		
+		if(Keyboard.isKeyDown(KeyEvent.VK_ESCAPE))
+			setMeta(null);
 		
 	}
 

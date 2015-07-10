@@ -2,13 +2,13 @@ package base_attack.ui;
 
 import java.awt.Graphics2D;
 
-public class ContentContainer extends Container {
+public class ContentContainer<T extends Container> extends Container {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private final Container content;
+	private final T content;
 
-	public ContentContainer(int x, int y, int width, int height, Container content, int gap) {
+	public ContentContainer(int x, int y, int width, int height, T content, int gap) {
 		
 		super(x, y, width, height);
 		
@@ -26,6 +26,10 @@ public class ContentContainer extends Container {
 		
 		content.draw(g);
 		
+	}
+	
+	public T getContent() {
+		return content;
 	}
 
 }

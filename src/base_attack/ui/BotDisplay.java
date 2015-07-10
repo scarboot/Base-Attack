@@ -7,13 +7,14 @@ import base_attack.TowerMeta;
 
 public class BotDisplay extends Display {
 	
-	public static final int BUTTON_CONTAINER_SIZE = 60;
+	public static final int BUTTON_CONTAINER_SIZE = 60, TOWER_BUTTON_FREE_GAP = 3;
 	
 	private final TowerDisplay towerDisplay = new TowerDisplay();
 	
-	private final ContentContainer towerDisplayContainer;
-	private final ContentContainer[] towerSelection;
+	private final ContentContainer<TowerDisplay> towerDisplayContainer;
+	private final ContentContainer<TowerButton>[] towerSelection;
 	
+	@SuppressWarnings("unchecked")
 	public BotDisplay(Frame f) {
 		
 		super(f, TowerDisplay.FONT_HEIGHT + TowerDisplay.LINE_HEIGHT + GAP * (1 + 2));
@@ -22,7 +23,7 @@ public class BotDisplay extends Display {
 		
 		final int width = f.width;
 		final int towerDisplayWidth = TowerDisplay.WIDTH_SPACE*3;
-		towerDisplayContainer = new ContentContainer(width - towerDisplayWidth, 0, towerDisplayWidth, heightInternal, towerDisplay, GAP);
+		towerDisplayContainer = new ContentContainer<TowerDisplay>(width - towerDisplayWidth, 0, towerDisplayWidth, heightInternal, towerDisplay, GAP);
 		
 		towerDisplay.setMeta(f.getGame().getTowerMetas()[0]);
 		
@@ -31,15 +32,26 @@ public class BotDisplay extends Display {
 		final TowerMeta<?>[] towerMetas = getGame().getTowerMetas();
 		towerSelection = new ContentContainer[towerMetas.length];
 		
+		final int beginX = GAP, beginY = height()/2 - BUTTON_CONTAINER_SIZE/2;
+		
 		for(int i = 0; i < towerMetas.length; i++) {
 			
-			final TowerButton button = new TowerButton(towerMetas[i]);
+			final TowerButton button = new TowerButton(towerMetas[i], getFrame());
 			
-			final ContentContainer container = new ContentContainer(0, 0, BUTTON_CONTAINER_SIZE, BUTTON_CONTAINER_SIZE, button, GAP/2-2);
-			System.out.println(button.width);
+			final ContentContainer<TowerButton> container = new ContentContainer<TowerButton>(beginX + i*(BUTTON_CONTAINER_SIZE + GAP), beginY, BUTTON_CONTAINER_SIZE, BUTTON_CONTAINER_SIZE, button, GAP/2 - TOWER_BUTTON_FREE_GAP);
 			towerSelection[i] = container;
 			
 		}
+		
+	}
+	
+	@Override
+	public void update(double t) {
+		
+		towerDisplay.update(t);
+		
+		for(ContentContainer<TowerButton> c: towerSelection)
+			c.getContent().update(t);
 		
 	}
 	
@@ -47,7 +59,7 @@ public class BotDisplay extends Display {
 		
 		drawBorder(g);
 		
-		for(ContentContainer c: towerSelection)
+		for(ContentContainer<TowerButton> c: towerSelection)
 			c.draw(g);
 		
 		towerDisplayContainer.draw(g);
@@ -64,6 +76,10 @@ public class BotDisplay extends Display {
 		
 		g.fillRect(towerDisplayContainer.x, 0, Display.BORDER, height());
 		
+	}
+	
+	public TowerDisplay getTowerDisplay() {
+		return towerDisplay;
 	}
 
 }

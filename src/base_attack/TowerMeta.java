@@ -99,7 +99,7 @@ public class TowerMeta<T extends Tower> {
 		return range;
 	}
 
-	private Game getGame() {
+	public Game getGame() {
 		return game;
 	}
 

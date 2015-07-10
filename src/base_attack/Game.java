@@ -1,8 +1,9 @@
 package base_attack;
 
 import base_attack.ui.Frame;
+import base_attack.ui.Mouse;
 
-public class Game implements Updateable {
+public class Game {
 	
 	public static Game game;
 	
@@ -10,10 +11,11 @@ public class Game implements Updateable {
 	private final MobSpawner spawner = new MobSpawner(this);
 	
 	private final TowerMeta<?>[] towerMetas = new TowerMeta<?>[]{
-		new TowerMeta<SlingTower>(this, "Sling Tower", 5, SlingBullet.DAMAGE, SlingTower.RANGE, SlingTower.class)
+			new TowerMeta<SlingTower>(this, "Sling Tower", 5, SlingBullet.DAMAGE, SlingTower.RANGE, SlingTower.class),
+			new TowerMeta<SlingTower>(this, "Sling Tower", 100, SlingBullet.DAMAGE, SlingTower.RANGE, SlingTower.class),
 	};
 	
-	private int money = 1;
+	private int money = 10;
 	
 	public Game() {
 		
@@ -65,11 +67,13 @@ public class Game implements Updateable {
 			}
 		
 	}
-
-	@Override
-	public void update(double t) {
+	
+	public void update(Frame f, double t) {
 		getMap().update(t);
 		getSpawner().update(t);
+		f.update(t);
+		Mouse.INSTANCE.update(t);
+		//TODO KEYBOARD
 	}
 	
 	public Map getMap() {
@@ -103,7 +107,7 @@ public class Game implements Updateable {
 			final double delta = (thisFrame - lastFrame)*0.001; // seconds
 			lastFrame = thisFrame;
 			
-			game.update(delta);
+			game.update(f, delta);
 			f.draw();
 			Thread.sleep(15);
 			
