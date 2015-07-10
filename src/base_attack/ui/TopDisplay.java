@@ -6,10 +6,10 @@ import java.awt.image.BufferedImage;
 
 public class TopDisplay extends Display {
 
-	private final BufferedImage
-	money = Images.loadImage("Money"),
-	clock = Images.loadImage("Clock"),
-	fight = Images.loadImage("Fight");
+	public static final BufferedImage
+	MONEY = Images.loadImage("Money"),
+	CLOCK = Images.loadImage("Clock"),
+	FIGHT = Images.loadImage("Fight");
 	
 	public TopDisplay(Frame f) {
 		super(f, 60);
@@ -20,7 +20,7 @@ public class TopDisplay extends Display {
 		drawBorder(g);
 		
 		//DRAW MONEY
-		drawInCenter(g, money, 0, 0, height(), height());
+		drawInCenter(g, MONEY, 0, 0, height(), height());
 		drawString(g, String.valueOf(getGame().getMoney()), space(), middle());
 		
 		g.setColor(getGame().getSpawner().isPause() ? Color.BLACK : Color.RED);
@@ -33,12 +33,12 @@ public class TopDisplay extends Display {
 		//DRAW MOBS
 		if(getGame().getSpawner().isPause()) {
 			
-			drawInCenter(g, clock, getFrame().width - space(), 0, height(), height());
+			drawInCenter(g, CLOCK, getFrame().width - space(), 0, height(), height());
 			drawString(g, getGame().getSpawner().formatTime(), getFrame().width - (space() + FONT_WIDTH*4), middle());
 			
 		} else {
 			
-			drawInCenter(g, fight, getFrame().width - space(), 0, height(), height());
+			drawInCenter(g, FIGHT, getFrame().width - space(), 0, height(), height());
 			
 		}
 		

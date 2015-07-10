@@ -4,10 +4,16 @@ import base_attack.ui.Frame;
 
 public class Game implements Updateable {
 	
-	private int money = 0;
+	public static Game game;
+	
 	private final Map map;
 	private final MobSpawner spawner = new MobSpawner(this);
-	public static Game game;
+	
+	private final TowerMeta<?>[] towerMetas = new TowerMeta<?>[]{
+		new TowerMeta<SlingTower>(this, "Sling Tower", 5, SlingBullet.DAMAGE, SlingTower.RANGE, SlingTower.class)
+	};
+	
+	private int money = 1;
 	
 	public Game() {
 		
@@ -103,6 +109,18 @@ public class Game implements Updateable {
 			
 		}
 		
+	}
+
+	public void removeMoney(int price) {
+		
+		if(price > money)
+			throw new IllegalArgumentException("price > money: " + price + " > " + money);
+		
+		money -= price;
+	}
+
+	public TowerMeta<?>[] getTowerMetas() {
+		return towerMetas;
 	}
 	
 }

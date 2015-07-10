@@ -28,11 +28,12 @@ public class Frame extends JFrame {
 		
 		this.game = game;
 		
+		this.width = width;
+		this.gameHeight = gameHeight;
+		
 		this.topDisplay = new TopDisplay(this);
 		this.botDisplay = new BotDisplay(this);
 		
-		this.width = width;
-		this.gameHeight = gameHeight;
 		this.height = topDisplay.getTotalHeight() + gameHeight + botDisplay.getTotalHeight();
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
