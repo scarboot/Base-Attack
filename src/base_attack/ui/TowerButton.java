@@ -2,6 +2,7 @@ package base_attack.ui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 import base_attack.TowerMeta;
 import base_attack.Updateable;
@@ -47,7 +48,28 @@ public class TowerButton extends Container implements Updateable {
 	@Override
 	public void update(double t) {
 		
+		synchronized (Mouse.getEvents()) {
+			
+			for(MouseHandleEvent e: Mouse.getEvents(MouseEventType.CLICK)) {
+				
+				if(containsPoint(e.event.getPoint()))
+					focus();
+				
+			}
+			
+		}
 		
+	}
+	
+	private void focus() {
+		frame.getBotDisplay().getTowerDisplay().setMeta(getMeta());
+	}
+
+	public boolean containsPoint(Point p) {
+		
+		Point p2 = new Point(p);
+		p2.translate(-pos.getX()+x, -pos.getY()+y);
+		return super.contains(p2);
 		
 	}
 

@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import base_attack.Game;
 import base_attack.Updateable;
 
-public class Display implements Updateable {
+public class Display extends Position implements Updateable {
 	
 	//CONSTANTS
 	

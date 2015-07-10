@@ -8,6 +8,8 @@ public abstract class Container extends Rectangle {
 	
 	private static final long serialVersionUID = 1L;
 	
+	public final Position pos = new Position();
+	
 	public Container() {
 	}
 	

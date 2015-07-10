@@ -12,7 +12,7 @@ public class Game {
 	
 	private final TowerMeta<?>[] towerMetas = new TowerMeta<?>[]{
 			new TowerMeta<SlingTower>(this, "Sling Tower", 5, SlingBullet.DAMAGE, SlingTower.RANGE, SlingTower.class),
-			new TowerMeta<SlingTower>(this, "Sling Tower", 100, SlingBullet.DAMAGE, SlingTower.RANGE, SlingTower.class),
+			new TowerMeta<SlingTower>(this, "Test", 100, SlingBullet.DAMAGE, SlingTower.RANGE, SlingTower.class),
 	};
 	
 	private int money = 10;
@@ -31,6 +31,7 @@ public class Game {
 		
 		this.map = m;
 		
+		/*
 		for(int i = 0; i < 3; i++)
 			while(true) {
 				
@@ -65,6 +66,7 @@ public class Game {
 				break;
 				
 			}
+		*/
 		
 	}
 	

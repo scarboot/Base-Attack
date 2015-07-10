@@ -20,7 +20,7 @@ public class Mouse implements Updateable, MouseMotionListener, MouseListener{
 	
 	private static Point pos = new Point(0, 0);
 	
-	private static boolean down, alt, altgr, meta, shift;
+	private static boolean down, alt, altgr, meta, shift, control;
 	
 	private Mouse() {
 	}
@@ -107,9 +107,10 @@ public class Mouse implements Updateable, MouseMotionListener, MouseListener{
 		setAltgr(e.isAltGraphDown());
 		setMeta(e.isMetaDown());
 		setShift(e.isShiftDown());
+		setControl(e.isControlDown());
 	}
 	
-	public static Point getPosOnScreen() {
+	public static Point getPos() {
 		return pos;
 	}
 
@@ -119,7 +120,7 @@ public class Mouse implements Updateable, MouseMotionListener, MouseListener{
 	
 	public static boolean isCleanDown(){
 		
-		return isDown() && !isAlt() && !isAltgr() && !isMeta() && !isShift();
+		return isDown() && !isAlt() && !isAltgr() && !isMeta() && !isShift() && !isControl();
 		
 	}
 
@@ -130,10 +131,10 @@ public class Mouse implements Updateable, MouseMotionListener, MouseListener{
 
 	@Override
 	public void update(double t) {
-		events.clear();
+		getEvents().clear();
 	}
 	
-	public Iterable<MouseHandleEvent> getEvents(final MouseEventType type) {
+	public static Iterable<MouseHandleEvent> getEvents(final MouseEventType type) {
 		
 		return new Iterable<MouseHandleEvent>() {
 			
@@ -146,10 +147,18 @@ public class Mouse implements Updateable, MouseMotionListener, MouseListener{
 		
 	}
 	
-	public static List<MouseHandleEvent> getEvents() {
+	public static synchronized List<MouseHandleEvent> getEvents() {
 		return events;
 	}
 	
+	public static boolean isControl() {
+		return control;
+	}
+
+	public static void setControl(boolean control) {
+		Mouse.control = control;
+	}
+
 	private static final class MouseHandleEventIterator implements Iterator<MouseHandleEvent> {
 		
 		private final MouseEventType type;
@@ -190,7 +199,11 @@ public class Mouse implements Updateable, MouseMotionListener, MouseListener{
 			if(next == null)
 				throw new NoSuchElementException();
 			
-			return next;
+			final MouseHandleEvent ret = next;
+			
+			nextInternal();
+			
+			return ret;
 			
 		}
 

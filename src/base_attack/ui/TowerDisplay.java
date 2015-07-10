@@ -3,9 +3,12 @@ package base_attack.ui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
+import base_attack.MapGenerator;
+import base_attack.Tile;
 import base_attack.TowerMeta;
 import static base_attack.ui.Display.GAP;
 
@@ -33,9 +36,11 @@ public class TowerDisplay extends Container {
 	WIDTH_SPACE = LINE_HEIGHT + FONT_WIDTH*3 + GAP,
 	FONT_HEIGHT_AND_GAP= FONT_HEIGHT + GAP;
 	
+	private final Frame f;
 	private TowerMeta<?> meta;
 	
-	public TowerDisplay() {
+	public TowerDisplay(Frame f) {
+		this.f = f;
 	}
 
 	public TowerMeta<?> getMeta() {
@@ -110,8 +115,24 @@ public class TowerDisplay extends Container {
 
 	public void update(double t) {
 		
-		if(Keyboard.isKeyDown(KeyEvent.VK_ESCAPE))
+		if(Keyboard.isKeyDown(KeyEvent.VK_ESCAPE) || Mouse.isMeta())
 			setMeta(null);
+		
+		if(meta != null) {
+			
+			final Point pos = new Point(Mouse.getPos());
+			pos.translate(0, -f.getTopDisplay().getTotalHeight());
+			
+			final int x = pos.x / Tile.SIZE;
+			final int y = pos.y / Tile.SIZE;
+			
+			if(!(x >= 0 && x < MapGenerator.X && y >= 0 && y < MapGenerator.Y))
+				return;
+			
+			if(Mouse.isCleanDown() && meta.isAllowed(x, y))
+				meta.placeChecked(x, y);
+			
+		}
 		
 	}
 
