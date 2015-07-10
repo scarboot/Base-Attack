@@ -8,26 +8,56 @@ public class Game implements Updateable {
 	private final Map map;
 	private final MobSpawner spawner = new MobSpawner(this);
 	public static Game game;
+	
 	public Game() {
 		
-		{
-			
-			Map m = null;
-			
-			while(m == null) {
-				try {
-					m = MapGenerator.generateMap();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		Map m = null;
+		
+		while(m == null) {
+			try {
+				m = MapGenerator.generateMap(this);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			
-			this.map = m;
-			
 		}
 		
-//		getMap().getTiles()[15/2+3][9/2-1].setTower(new SlingTower(this, getMap().getTiles()[15/2+3][9/2-1]));
-//		getMap().getTiles()[15/2+1][9/2].setTower(new SlingTower(this, getMap().getTiles()[15/2+1][9/2]));
+		this.map = m;
+		
+		for(int i = 0; i < 3; i++)
+			while(true) {
+				
+				int x = (int) (Math.random()*MapGenerator.X);
+				int y = (int) (Math.random()*MapGenerator.Y);
+				
+				final Tile t = getMap().getTiles()[x][y];
+				
+				if(!t.canBuildTower())
+					continue;
+				
+				boolean nearEnough = false;
+				
+				LOOP: for(Tile[] tiles: getMap().getTiles())
+					for(Tile tile: tiles){
+						
+						if(tile.getType() == TileType.STONE)
+							continue;
+						
+						if(PointDouble.distanceSq(x, y, tile.x, tile.y) < 3) {
+							nearEnough = true;
+							break LOOP;
+						}
+						
+					}
+				
+				if(!nearEnough)
+					continue;
+				
+				t.setTower(new SlingTower(this, t));
+				
+				break;
+				
+			}
+		
 	}
 
 	@Override

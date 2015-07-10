@@ -10,9 +10,7 @@ public class PointDouble {
 	}
 
 	public double distanceSq(double x, double y) {
-		final double dx = x - this.x;
-		final double dy = y - this.y;
-		return Math.pow(dx, 2) + Math.pow(dy, 2);
+		return distanceSq(this.x, this.y, x, y);
 	}
 	
 	public double distance(double x, double y) {
@@ -87,6 +85,12 @@ public class PointDouble {
 	@Override
 	public String toString() {
 		return x + " / " + y;
+	}
+
+	public static double distanceSq(double x1, double y1, double x2, double y2) {
+		final double dx = x2 - x1;
+		final double dy = y2 - y1;
+		return Math.pow(dx, 2) + Math.pow(dy, 2);
 	}
 
 }

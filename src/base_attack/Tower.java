@@ -1,5 +1,6 @@
 package base_attack;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import base_attack.ui.Images;
@@ -11,14 +12,14 @@ public abstract class Tower implements Updateable {
 	private final Game game;
 	private final Tile tile;	
 	private final Cooldown cooldown;
-	private final double radius;
+	private final double range;
 	
-	public Tower(Game game, Tile tile, double cooldown, double radius) {
+	public Tower(Game game, Tile tile, double cooldown, double range) {
 		
 		this.game = game;
 		this.tile = tile;
 		this.cooldown = new Cooldown(cooldown);
-		this.radius = radius;
+		this.range = range;
 		
 		image = Images.loadImage(getClass().getSimpleName());
 	}
@@ -47,8 +48,8 @@ public abstract class Tower implements Updateable {
 	
 	public abstract boolean shoot();
 
-	public double getRadius() {
-		return radius;
+	public double getRange() {
+		return range;
 	}
 
 	private Cooldown getCooldown() {
@@ -61,7 +62,7 @@ public abstract class Tower implements Updateable {
 	
 	public Mob findMob() {
 		
-		final double maxDistanceSq = Math.pow(getRadius(), 2);
+		final double maxDistanceSq = Math.pow(getRange(), 2);
 		
 		double bestDistanceSq = Double.POSITIVE_INFINITY;
 		Mob bestMob = null;
@@ -82,6 +83,15 @@ public abstract class Tower implements Updateable {
 		
 		return bestMob;
 		
+	}
+	
+	public void draw(Graphics2D g) {
+		
+		final int x = getTile().x * Tile.SIZE;
+		final int y = getTile().y * Tile.SIZE;
+		
+		g.drawImage(getImage(), x, y, null);
+
 	}
 	
 }

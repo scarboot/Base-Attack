@@ -9,7 +9,6 @@ import javax.swing.JFrame;
 import base_attack.Bullet;
 import base_attack.Game;
 import base_attack.Mob;
-import base_attack.PointDouble;
 import base_attack.Tile;
 
 public class Frame extends JFrame {
@@ -123,18 +122,18 @@ public class Frame extends JFrame {
 		
 		for(int x = 0; x < tiles.length; x++)
 			for(int y = 0; y < tiles[x].length; y++)
-				drawTile(tiles[x][y], g, false);
+				tiles[x][y].draw(g);
 		
 		//Draw Mobs
 		
 		for(Mob m: game.getMap().getMobs())
-			drawMob(m, g);
+			m.draw(g);
 		
 		//Draw Towers
 		
 		for(int x = 0; x < tiles.length; x++)
 			for(int y = 0; y < tiles[x].length; y++)
-				drawTile(tiles[x][y], g, true);
+				tiles[x][y].drawTower(g);
 		
 		//Draw Bullets
 		
@@ -146,33 +145,6 @@ public class Frame extends JFrame {
 	private void drawBotMenu(Graphics2D g) {
 		
 		botDisplay.draw(g);
-		
-	}
-
-	private void drawTile(Tile tile, Graphics2D g, boolean drawTower) {
-		
-		final int
-		x = tile.x * Tile.SIZE,
-		y = tile.y * Tile.SIZE;
-		
-		//Draw TileType
-		
-		if(!drawTower)
-			g.drawImage(tile.getType().IMAGE, x, y, null);
-		
-		//Draw Tower
-		
-		if(tile.hasTower() && drawTower)
-			g.drawImage(tile.getTower().getImage(), x, y, null);
-		
-	}
-
-	private void drawMob(Mob m, Graphics2D g) {
-		
-		final PointDouble p = m.getMovement().getExactLocation();
-		final int x = (int) (p.x * Tile.SIZE), y = (int) (p.y*Tile.SIZE);
-		
-		g.drawImage(m.getImage(), x, y, null);
 		
 	}
 	
