@@ -12,8 +12,8 @@ public class MapGenerator {
 
     public static final int X = 15, Y = 9, DIRTAMOUNT = 3; //DIRTAMAOUNT IN REVERSE PERCENT
     public static Random random = new Random();
-
-    public static Map generateMap(){
+    //Lukas: Added parameter 'game' for initiating the Base properly
+    public static Map generateMap(Game game){
         Map newMap = new Map(X, Y);
         List<Tile> way = new ArrayList<>();
 
@@ -25,7 +25,7 @@ public class MapGenerator {
         }
 
         way.add(new Tile(0,Y/2));
-        newMap.setTower(0,Y/2, new Base());
+        newMap.setTower(0,Y/2, new Base(game, newMap.getTiles()[0][Y/2]));
         // how many tiles uo or down
         // which direction
         // when to go to the next column

@@ -1,5 +1,7 @@
 package base_attack;
 
+import java.awt.Graphics2D;
+
 public class Tile {
 	
 	public static final int SIZE = 50; // equals width and height
@@ -41,6 +43,26 @@ public class Tile {
     		throw new IllegalStateException("A Tower may only be placed on stone: " + getType() + " " + t);
     	
         tower = t;
+        
     }
+
+	public void draw(Graphics2D g) {
+		
+		getType().draw(g, x, y);
+		
+	}
+
+	public void drawTower(Graphics2D g) {
+		
+		if(hasTower())
+			getTower().draw(g);
+		
+	}
+
+	public boolean canBuildTower() {
+		
+		return !hasTower() && getType() == TileType.STONE;
+		
+	}
     
 }

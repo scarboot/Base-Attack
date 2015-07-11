@@ -5,8 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import base_attack.Game;
+import base_attack.Updateable;
 
-public class Display {
+public class Display extends Position implements Updateable {
 	
 	//CONSTANTS
 	
@@ -53,11 +54,11 @@ public class Display {
 		return frame.getGame();
 	}
 	
-	public static void drawString(Graphics2D g, String s, int x, int middleY) {
+	public static void drawString(Graphics2D g, Object o, int x, int middleY) {
 		
 		final int y = (int) (middleY + fontHeightActual/2);
 		
-		g.drawString(s, x, y);
+		g.drawString(String.valueOf(o), x, y);
 		
 	}
 
@@ -93,6 +94,14 @@ public class Display {
 	
 	public int middle() {
 		return height()/2;
+	}
+
+	public static void drawInCenter(Graphics2D g, BufferedImage image, int height) {
+		drawInCenter(g, image, 0, 0, height, height);		
+	}
+
+	@Override
+	public void update(double t) {
 	}
 
 }

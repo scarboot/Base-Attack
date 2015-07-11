@@ -1,6 +1,9 @@
 package base_attack.ui;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
 
@@ -8,11 +11,13 @@ import javax.swing.JFrame;
 
 import base_attack.Bullet;
 import base_attack.Game;
+import base_attack.MapGenerator;
 import base_attack.Mob;
-import base_attack.PointDouble;
 import base_attack.Tile;
+import base_attack.TowerMeta;
+import base_attack.Updateable;
 
-public class Frame extends JFrame {
+public class Frame extends JFrame implements Updateable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -22,6 +27,8 @@ public class Frame extends JFrame {
 	
 	private final TopDisplay topDisplay;
 	private final BotDisplay botDisplay;
+	
+	private final Rectangle gameArea;
 
 	public Frame(Game game, int width, int gameHeight) {
 		
@@ -29,23 +36,25 @@ public class Frame extends JFrame {
 		
 		this.game = game;
 		
-		this.topDisplay = new TopDisplay(this);
-		this.botDisplay = new BotDisplay(this);
-		
 		this.width = width;
 		this.gameHeight = gameHeight;
+		
+		this.topDisplay = new TopDisplay(this);
+		this.botDisplay = new BotDisplay(this, 0, topDisplay.getTotalHeight() + gameHeight);
+		
 		this.height = topDisplay.getTotalHeight() + gameHeight + botDisplay.getTotalHeight();
+		
+		gameArea = new Rectangle(0, topDisplay.getTotalHeight(), width, gameHeight);
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setFocusable(true);
 		setResizable(false);
 		setLayout(null);
 		
-		//addKeyListener(new Keyboard());
+		addKeyListener(Keyboard.INSTANCE);
 		
-		//final Mouse m = new Mouse();
-		//addMouseListener(m);
-		//addMouseMotionListener(m);
+		getRootPane().addMouseListener(Mouse.INSTANCE);
+		getRootPane().addMouseMotionListener(Mouse.INSTANCE);
 		
 		setLocation(-width*2, -height*2);
 		setVisible(true);
@@ -96,22 +105,50 @@ public class Frame extends JFrame {
 		Graphics2D subG;
 		
 		//Top display
-		subG = (Graphics2D) g.create(0, 0, width, topDisplay.getTotalHeight());
-		drawTopDisplay(subG);
+		subG = (Graphics2D) g.create(topDisplay.getX(), topDisplay.getY(), width, topDisplay.getTotalHeight());
+		topDisplay.draw(subG);
 		
 		//Game
 		subG = (Graphics2D) g.create(0, topDisplay.getTotalHeight(), width, gameHeight);
 		drawGame(subG);
 		
+		//Tower Building
+		drawTowerBuilding(subG);
+		
 		//Bottom menu
-		subG = (Graphics2D) g.create(0, topDisplay.getTotalHeight() + gameHeight, width, botDisplay.getTotalHeight());
-		drawBotMenu(subG);
+		subG = (Graphics2D) g.create(botDisplay.getX(), botDisplay.getY(), width, botDisplay.getTotalHeight());
+		botDisplay.draw(subG);
 		
 	}
 
-	private void drawTopDisplay(Graphics2D g) {
+	private void drawTowerBuilding(Graphics2D subG) {
 		
-		topDisplay.draw(g);
+		final TowerMeta<?> meta = getBotDisplay().getTowerDisplay().getMeta();
+		
+		if(meta != null) {
+			
+			final Point pos = new Point(Mouse.getPos());
+			
+			if(!getGameArea().contains(pos))
+				return;
+			
+			pos.translate(0, -getTopDisplay().getTotalHeight());
+			
+			final int x = pos.x / Tile.SIZE;
+			final int y = pos.y / Tile.SIZE;
+			
+			if(!(x >= 0 && x < MapGenerator.X && y >= 0 && y < MapGenerator.Y)) //Should be useless
+				return;
+			
+			final Color c = meta.isAllowed(x, y) ? new Color(0, 1f, 0, 0.3f) : new Color(1f, 0, 0, 0.3f);
+			
+			final int drawX = x*Tile.SIZE, drawY = y*Tile.SIZE;
+			
+			subG.setColor(c);
+			subG.drawImage(meta.getImage(), drawX, drawY, null);
+			subG.fillRect(drawX, drawY, Tile.SIZE, Tile.SIZE);
+			
+		}
 		
 	}
 
@@ -123,18 +160,18 @@ public class Frame extends JFrame {
 		
 		for(int x = 0; x < tiles.length; x++)
 			for(int y = 0; y < tiles[x].length; y++)
-				drawTile(tiles[x][y], g, false);
+				tiles[x][y].draw(g);
 		
 		//Draw Mobs
 		
 		for(Mob m: game.getMap().getMobs())
-			drawMob(m, g);
+			m.draw(g);
 		
 		//Draw Towers
 		
 		for(int x = 0; x < tiles.length; x++)
 			for(int y = 0; y < tiles[x].length; y++)
-				drawTile(tiles[x][y], g, true);
+				tiles[x][y].drawTower(g);
 		
 		//Draw Bullets
 		
@@ -143,41 +180,26 @@ public class Frame extends JFrame {
 		
 	}
 	
-	private void drawBotMenu(Graphics2D g) {
-		
-		botDisplay.draw(g);
-		
-	}
-
-	private void drawTile(Tile tile, Graphics2D g, boolean drawTower) {
-		
-		final int
-		x = tile.x * Tile.SIZE,
-		y = tile.y * Tile.SIZE;
-		
-		//Draw TileType
-		
-		if(!drawTower)
-			g.drawImage(tile.getType().IMAGE, x, y, null);
-		
-		//Draw Tower
-		
-		if(tile.hasTower() && drawTower)
-			g.drawImage(tile.getTower().getImage(), x, y, null);
-		
-	}
-
-	private void drawMob(Mob m, Graphics2D g) {
-		
-		final PointDouble p = m.getMovement().getExactLocation();
-		final int x = (int) (p.x * Tile.SIZE), y = (int) (p.y*Tile.SIZE);
-		
-		g.drawImage(m.getImage(), x, y, null);
-		
-	}
-	
 	public Game getGame() {
 		return game;
+	}
+	
+	public TopDisplay getTopDisplay() {
+		return topDisplay;
+	}
+	
+	public BotDisplay getBotDisplay() {
+		return botDisplay;
+	}
+	
+	@Override
+	public void update(double t) {
+		getTopDisplay().update(t);
+		getBotDisplay().update(t);
+	}
+
+	public Rectangle getGameArea() {
+		return gameArea;
 	}
 
 }

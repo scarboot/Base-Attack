@@ -1,5 +1,6 @@
 package base_attack;
 
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
@@ -57,6 +58,18 @@ public abstract class Mob implements Updateable {
 
 	public void damage(double damage) {
 		health -= damage;
+	}
+
+	public void draw(Graphics2D g) {
+		
+		final PointDouble p = getMovement().getExactLocation();
+		
+		final int
+		x = (int) (p.x * Tile.SIZE),
+		y = (int) (p.y*Tile.SIZE);
+		
+		g.drawImage(getImage(), x, y, null);
+		
 	}
 	
 }
