@@ -153,7 +153,7 @@ public class Frame extends JFrame implements Updateable {
 		
 		//Draw Mobs
 		
-		for(Mob m: game.getMap().getMobs())
+		for(Mob m: getGame().getMap().getMobs())
 			m.draw(g);
 		
 		//Draw Towers

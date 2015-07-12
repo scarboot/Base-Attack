@@ -11,6 +11,7 @@ public class BotDisplay extends Display {
 	
 	private final DisplaySpot displaySpot = new DisplaySpot();
 	private final TowerMetaDisplay towerMetaDisplay;
+	private final PlacedTowerDisplay placedTowerDisplay;
 	
 	private final ContentContainer<Container> displaySpotContainer;
 	private final ContentContainer<TowerButton>[] towerSelection;
@@ -24,6 +25,7 @@ public class BotDisplay extends Display {
 		setY(y);
 		
 		towerMetaDisplay = new TowerMetaDisplay(f);
+		placedTowerDisplay = new PlacedTowerDisplay(f);
 		
 		//TOWER DISPLAY
 		
@@ -59,7 +61,8 @@ public class BotDisplay extends Display {
 	@Override
 	public void update(double t) {
 		
-		towerMetaDisplay.update(t);
+		getTowerMetaDisplay().update(t);
+		getPlacedTowerDisplay().update(t);
 		
 		for(ContentContainer<TowerButton> c: towerSelection)
 			c.getContent().update(t);
@@ -73,7 +76,7 @@ public class BotDisplay extends Display {
 		for(ContentContainer<TowerButton> c: towerSelection)
 			c.draw(g);
 		
-		displaySpotContainer.draw(g);
+		getDisplaySpotContainer().draw(g);
 
 	}
 	
@@ -85,7 +88,7 @@ public class BotDisplay extends Display {
 		//TRANSLATE UNDER BORDER
 		g.translate(0, BORDER);
 		
-		g.fillRect(displaySpotContainer.x, 0, Display.BORDER, height());
+		g.fillRect(getDisplaySpotContainer().x, 0, Display.BORDER, height());
 		
 	}
 	
@@ -95,6 +98,14 @@ public class BotDisplay extends Display {
 	
 	public DisplaySpot getDisplaySpot() {
 		return displaySpot;
+	}
+
+	public PlacedTowerDisplay getPlacedTowerDisplay() {
+		return placedTowerDisplay;
+	}
+	
+	private ContentContainer<Container> getDisplaySpotContainer() {
+		return displaySpotContainer;
 	}
 
 }

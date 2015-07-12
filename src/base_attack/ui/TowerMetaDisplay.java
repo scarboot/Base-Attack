@@ -115,8 +115,11 @@ public class TowerMetaDisplay extends Container implements Spot {
 
 	public void update(double t) {
 		
-		if(Keyboard.isKeyDown(KeyEvent.VK_ESCAPE) || Mouse.isMeta())
+		if(Keyboard.isKeyDown(KeyEvent.VK_ESCAPE) || Mouse.isMeta() || !isFocused())
 			setMeta(null);
+		
+		if(!isFocused())
+			return;
 		
 		if(meta != null) {
 			
@@ -177,6 +180,16 @@ public class TowerMetaDisplay extends Container implements Spot {
 	@Override
 	public Position getPos() {
 		return pos;
+	}
+
+	@Override
+	public boolean isFocused() {
+		return f.getBotDisplay().getDisplaySpot().getContent() == this;
+	}
+	
+	@Override
+	public void setFocused() {
+		f.getBotDisplay().getDisplaySpot().setContent(this);
 	}
 
 }
