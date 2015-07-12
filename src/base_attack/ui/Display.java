@@ -18,7 +18,7 @@ public class Display extends Position implements Updateable {
 	//FONT STUFF
 	
 	public static final int
-	FONT_HEIGHT = 60*2/3,
+	FONT_HEIGHT = 40,
 	FONT_WIDTH = FONT_HEIGHT*2/3;
 	
 	public static final double
@@ -56,9 +56,20 @@ public class Display extends Position implements Updateable {
 	
 	public static void drawString(Graphics2D g, Object o, int x, int middleY) {
 		
-		final int y = (int) (middleY + fontHeightActual/2);
+		final int y = (int) (middleY + getFontHeight(g)/2);
 		
 		g.drawString(String.valueOf(o), x, y);
+		
+	}
+
+	public static void drawStringCentered(Graphics2D g, Object o, int middleX, int middleY) {
+		
+		final String print = String.valueOf(o);
+		
+		final int x = (int) (middleX - print.length()*getFontWidth(g)*0.5);
+		final int y = (int) (middleY + getFontHeight(g)/2);
+		
+		g.drawString(print, x, y);
 		
 	}
 
@@ -102,6 +113,22 @@ public class Display extends Position implements Updateable {
 
 	@Override
 	public void update(double t) {
+	}
+	
+	public static double getFontHeight(Font f) {
+		return f.getSize2D()*2/3;
+	}
+	
+	private static double getFontHeight(Graphics2D g) {
+		return getFontHeight(g.getFont());
+	}
+	
+	public static double getFontWidth(Font f) {
+		return f.getSize2D()*0.9*2/3;
+	}
+	
+	private static double getFontWidth(Graphics2D g) {
+		return getFontWidth(g.getFont());
 	}
 
 }

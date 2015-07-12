@@ -9,26 +9,29 @@ public class BotDisplay extends Display {
 	
 	public static final int BUTTON_CONTAINER_SIZE = 60, TOWER_BUTTON_FREE_GAP = 3;
 	
-	private final TowerDisplay towerDisplay;
+	private final DisplaySpot displaySpot = new DisplaySpot();
+	private final TowerMetaDisplay towerMetaDisplay;
 	
-	private final ContentContainer<TowerDisplay> towerDisplayContainer;
+	private final ContentContainer<Container> displaySpotContainer;
 	private final ContentContainer<TowerButton>[] towerSelection;
 	
 	@SuppressWarnings("unchecked")
 	public BotDisplay(Frame f, int x, int y) {
 		
-		super(f, TowerDisplay.FONT_HEIGHT + TowerDisplay.LINE_HEIGHT + GAP * (1 + 2));
+		super(f, TowerMetaDisplay.FONT_HEIGHT + TowerMetaDisplay.LINE_HEIGHT + GAP * (1 + 2));
 		
 		setX(x);
 		setY(y);
 		
-		towerDisplay = new TowerDisplay(f);
+		towerMetaDisplay = new TowerMetaDisplay(f);
 		
 		//TOWER DISPLAY
 		
 		final int width = f.width;
-		final int towerDisplayWidth = TowerDisplay.WIDTH_SPACE*3;
-		towerDisplayContainer = new ContentContainer<TowerDisplay>(width - towerDisplayWidth, 0, towerDisplayWidth, heightInternal, towerDisplay, GAP);
+		final int displaySpotWidth = (int) (TowerMetaDisplay.WIDTH_SPACE*3.3);
+		displaySpotContainer = new ContentContainer<Container>(width - displaySpotWidth, 0, displaySpotWidth, heightInternal, displaySpot, GAP);
+		
+		getDisplaySpot().setContent(getTowerMetaDisplay());
 		
 		//TOWER SELECTION
 		
@@ -56,7 +59,7 @@ public class BotDisplay extends Display {
 	@Override
 	public void update(double t) {
 		
-		towerDisplay.update(t);
+		towerMetaDisplay.update(t);
 		
 		for(ContentContainer<TowerButton> c: towerSelection)
 			c.getContent().update(t);
@@ -70,7 +73,7 @@ public class BotDisplay extends Display {
 		for(ContentContainer<TowerButton> c: towerSelection)
 			c.draw(g);
 		
-		towerDisplayContainer.draw(g);
+		displaySpotContainer.draw(g);
 
 	}
 	
@@ -82,12 +85,16 @@ public class BotDisplay extends Display {
 		//TRANSLATE UNDER BORDER
 		g.translate(0, BORDER);
 		
-		g.fillRect(towerDisplayContainer.x, 0, Display.BORDER, height());
+		g.fillRect(displaySpotContainer.x, 0, Display.BORDER, height());
 		
 	}
 	
-	public TowerDisplay getTowerDisplay() {
-		return towerDisplay;
+	public TowerMetaDisplay getTowerMetaDisplay() {
+		return towerMetaDisplay;
+	}
+	
+	public DisplaySpot getDisplaySpot() {
+		return displaySpot;
 	}
 
 }

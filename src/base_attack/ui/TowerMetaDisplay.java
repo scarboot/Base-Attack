@@ -12,7 +12,7 @@ import base_attack.Tile;
 import base_attack.TowerMeta;
 import static base_attack.ui.Display.GAP;
 
-public class TowerDisplay extends Container {
+public class TowerMetaDisplay extends Container implements Spot {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -39,7 +39,7 @@ public class TowerDisplay extends Container {
 	private final Frame f;
 	private TowerMeta<?> meta;
 	
-	public TowerDisplay(Frame f) {
+	public TowerMetaDisplay(Frame f) {
 		this.f = f;
 	}
 
@@ -134,6 +134,49 @@ public class TowerDisplay extends Container {
 			
 		}
 		
+	}
+
+	@Override
+	public void drawOnGameBoard(Graphics2D g) {
+		
+		if(meta != null) {
+			
+			final Point pos = new Point(Mouse.getPos());
+			
+			if(!f.getGameArea().contains(pos))
+				return;
+			
+			pos.translate(0, -f.getTopDisplay().getTotalHeight());
+			
+			final int x = pos.x / Tile.SIZE;
+			final int y = pos.y / Tile.SIZE;
+			
+			if(!(x >= 0 && x < MapGenerator.X && y >= 0 && y < MapGenerator.Y)) //Should be useless
+				return;
+			
+			final Color c = meta.isAllowed(x, y) ? new Color(0, 1f, 0, 0.3f) : new Color(1f, 0, 0, 0.3f);
+			
+			final int drawX = x*Tile.SIZE, drawY = y*Tile.SIZE;
+			
+			g.setColor(c);
+			g.drawImage(meta.getImage(), drawX, drawY, null);
+			g.fillRect(drawX, drawY, Tile.SIZE, Tile.SIZE);
+			
+			final int rangeBeginX = (int)((x + 0.5 - meta.getRange())*Tile.SIZE);
+			final int rangeBeginY = (int)((y + 0.5 - meta.getRange())*Tile.SIZE);
+			final int diameter = (int) (meta.getRange()*2*Tile.SIZE);
+			
+			g.setColor(Color.RED);
+			
+			g.drawOval(rangeBeginX, rangeBeginY, diameter, diameter);
+			
+		}
+		
+	}
+
+	@Override
+	public Position getPos() {
+		return pos;
 	}
 
 }

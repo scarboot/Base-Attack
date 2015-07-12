@@ -25,4 +25,8 @@ public class Position {
 		setY(y);
 	}
 
+	public void set(Position pos) {
+		set(pos.x, pos.y);
+	}
+
 }
