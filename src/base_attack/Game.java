@@ -11,11 +11,11 @@ public class Game {
 	private final MobSpawner spawner = new MobSpawner(this);
 	
 	private final TowerMeta<?>[] towerMetas = new TowerMeta<?>[]{
-			new TowerMeta<SlingTower>(this, "Sling Tower", 5, SlingBullet.DAMAGE, SlingTower.RANGE, SlingTower.class),
-			new TowerMeta<SlingTower>(this, "Test", 100, SlingBullet.DAMAGE, SlingTower.RANGE, SlingTower.class),
+			new TowerMeta<SlingTower>(this, "Sling Tower", 10, SlingBullet.DAMAGE, SlingTower.RANGE, SlingTower.class),
 	};
 	
-	private int money = 10;
+	private Base base;
+	private int money = 20;
 	
 	public Game() {
 		
@@ -26,6 +26,7 @@ public class Game {
 				m = MapGenerator.generateMap(this);
 			} catch (Exception e) {
 				e.printStackTrace();
+				base = null;
 			}
 		}
 		
@@ -71,30 +72,18 @@ public class Game {
 	}
 	
 	public void update(Frame f, double t) {
-		getMap().update(t);
-		getSpawner().update(t);
-		f.update(t);
+		
+		if(!isGameOver()) {
+			
+			getMap().update(t);
+			getSpawner().update(t);
+			f.update(t);
+			
+		}
+		
 		Mouse.INSTANCE.update(t);
 		//TODO KEYBOARD
 	}
-	
-	public Map getMap() {
-		return map;
-	}
-
-	public MobSpawner getSpawner() {
-		return spawner;
-	}
-
-	public int getMoney() {
-		return money;
-	}
-
-	public void setMoney(int money) {
-		this.money = money;
-	}
-	
-	// End of useful code / main
 	
 	public static void main(String[] args) throws InterruptedException {
 		
@@ -116,6 +105,22 @@ public class Game {
 		}
 		
 	}
+	
+	public Map getMap() {
+		return map;
+	}
+
+	public MobSpawner getSpawner() {
+		return spawner;
+	}
+
+	public int getMoney() {
+		return money;
+	}
+
+	public void setMoney(int money) {
+		this.money = money;
+	}
 
 	public void removeMoney(int price) {
 		
@@ -127,6 +132,27 @@ public class Game {
 
 	public TowerMeta<?>[] getTowerMetas() {
 		return towerMetas;
+	}
+
+	public void addMoney(int i) {
+		money += i;
+	}
+
+	public Base getBase() {
+		return base;
+	}
+
+	public void setBase(Base base) {
+		
+		if(this.base != null)
+			throw new IllegalStateException();
+		
+		this.base = base;
+		
+	}
+	
+	public boolean isGameOver() {
+		return getBase().isDead();
 	}
 	
 }

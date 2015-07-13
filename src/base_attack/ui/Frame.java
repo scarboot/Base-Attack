@@ -1,8 +1,8 @@
 package base_attack.ui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
@@ -11,10 +11,8 @@ import javax.swing.JFrame;
 
 import base_attack.Bullet;
 import base_attack.Game;
-import base_attack.MapGenerator;
 import base_attack.Mob;
 import base_attack.Tile;
-import base_attack.TowerMeta;
 import base_attack.Updateable;
 
 public class Frame extends JFrame implements Updateable {
@@ -113,42 +111,33 @@ public class Frame extends JFrame implements Updateable {
 		drawGame(subG);
 		
 		//Tower Building
-		drawTowerBuilding(subG);
+		drawDisplaySpot(subG);
 		
 		//Bottom menu
 		subG = (Graphics2D) g.create(botDisplay.getX(), botDisplay.getY(), width, botDisplay.getTotalHeight());
 		botDisplay.draw(subG);
 		
+		//Game Over (Game Graphics)
+		subG = (Graphics2D) g.create(0, topDisplay.getTotalHeight(), width, gameHeight);
+		
+		if(getGame().isGameOver())
+			drawGameOver(subG);
+		
 	}
 
-	private void drawTowerBuilding(Graphics2D subG) {
+	private void drawGameOver(Graphics2D g) {
 		
-		final TowerMeta<?> meta = getBotDisplay().getTowerDisplay().getMeta();
+		final String gameOver = "Game Over";
 		
-		if(meta != null) {
-			
-			final Point pos = new Point(Mouse.getPos());
-			
-			if(!getGameArea().contains(pos))
-				return;
-			
-			pos.translate(0, -getTopDisplay().getTotalHeight());
-			
-			final int x = pos.x / Tile.SIZE;
-			final int y = pos.y / Tile.SIZE;
-			
-			if(!(x >= 0 && x < MapGenerator.X && y >= 0 && y < MapGenerator.Y)) //Should be useless
-				return;
-			
-			final Color c = meta.isAllowed(x, y) ? new Color(0, 1f, 0, 0.3f) : new Color(1f, 0, 0, 0.3f);
-			
-			final int drawX = x*Tile.SIZE, drawY = y*Tile.SIZE;
-			
-			subG.setColor(c);
-			subG.drawImage(meta.getImage(), drawX, drawY, null);
-			subG.fillRect(drawX, drawY, Tile.SIZE, Tile.SIZE);
-			
-		}
+		g.setColor(Color.RED);
+		g.setFont(new Font("Arial", Font.BOLD, 50));
+		Display.drawStringCentered(g, gameOver, width/2, gameHeight/3);
+		
+	}
+
+	private void drawDisplaySpot(Graphics2D g) {
+		
+		getBotDisplay().getDisplaySpot().drawOnGameBoard(g);
 		
 	}
 
@@ -164,7 +153,7 @@ public class Frame extends JFrame implements Updateable {
 		
 		//Draw Mobs
 		
-		for(Mob m: game.getMap().getMobs())
+		for(Mob m: getGame().getMap().getMobs())
 			m.draw(g);
 		
 		//Draw Towers

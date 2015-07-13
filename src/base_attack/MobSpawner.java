@@ -11,9 +11,9 @@ public class MobSpawner implements Updateable {
 	public MobSpawner(Game game) {
 		this.game = game;
 		this.calc = new WaveStatsCalculator(
-				5, 2, 
+				5, -1, 
 				10, 3.75/* not 4 => gets faster with every wave*/, 
-				5, 2);
+				5, 0.5);
 		calc.start();
 	}
 
@@ -157,9 +157,16 @@ public class MobSpawner implements Updateable {
 		}
 
 		public void calcTimes() {
+			
 			spawningTime	= baseTime	+ timePlus	*waves;
+			
 			pauseTime		= basePause	+ pausePlus	*waves;
-			mobs			= baseMobs	+ mobsPlus	*waves;
+			
+			if(mobsPlus != -1)
+				mobs			= baseMobs	+ mobsPlus	*waves;
+			else
+				mobs			= baseMobs	+ waves*waves;
+			
 		}
 		
 		public boolean isSpawning() {

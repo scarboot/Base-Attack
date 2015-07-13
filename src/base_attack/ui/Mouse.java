@@ -120,7 +120,13 @@ public class Mouse implements Updateable, MouseMotionListener, MouseListener{
 	
 	public static boolean isCleanDown(){
 		
-		return isDown() && !isAlt() && !isAltgr() && !isMeta() && !isShift() && !isControl();
+		return isDown() && isClean();
+		
+	}
+	
+	public static boolean isClean(){
+		
+		return !isAlt() && !isAltgr() && !isMeta() && !isShift() && !isControl();
 		
 	}
 
@@ -211,6 +217,43 @@ public class Mouse implements Updateable, MouseMotionListener, MouseListener{
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
+		
+	}
+	
+	public static boolean hasEvent(MouseEventType type) {
+				
+		synchronized (getEvents()) {
+			
+			for(MouseHandleEvent e: getEvents())
+				if(e.type == type)
+					return true;
+			
+		}
+		
+		return false;
+		
+	}
+
+	public static boolean isClean(MouseEvent e) {
+		
+		return !e.isAltDown() && !e.isAltGraphDown() && !e.isControlDown() && !e.isMetaDown() && !e.isShiftDown();
+		
+	}
+
+	public static boolean wasCleanDown() {
+		
+		synchronized (Mouse.getEvents()) {
+			
+			for(MouseHandleEvent e: Mouse.getEvents(MouseEventType.CLICK)) {
+				
+				if(isClean(e.event))
+					return true;
+				
+			}
+			
+		}
+		
+		return false;
 		
 	}
 

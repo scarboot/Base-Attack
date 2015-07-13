@@ -14,7 +14,7 @@ public class MapGenerator {
     public static Random random = new Random();
     //Lukas: Added parameter 'game' for initiating the Base properly
     public static Map generateMap(Game game){
-        Map newMap = new Map(X, Y);
+        Map newMap = new Map(game, X, Y);
         List<Tile> way = new ArrayList<>();
 
         for (int i = 0; i < X; i++) {

@@ -42,7 +42,7 @@ public class TowerButton extends Container implements Updateable {
 	}
 	
 	public boolean isFocued() {
-		return frame.getBotDisplay().getTowerDisplay().getMeta() == getMeta();
+		return frame.getBotDisplay().getTowerMetaDisplay().getMeta() == getMeta();
 	}
 
 	@Override
@@ -51,6 +51,9 @@ public class TowerButton extends Container implements Updateable {
 		synchronized (Mouse.getEvents()) {
 			
 			for(MouseHandleEvent e: Mouse.getEvents(MouseEventType.CLICK)) {
+				
+				if(!Mouse.isClean(e.event))
+					continue;
 				
 				if(containsPoint(e.event.getPoint()))
 					focus();
@@ -62,7 +65,8 @@ public class TowerButton extends Container implements Updateable {
 	}
 	
 	private void focus() {
-		frame.getBotDisplay().getTowerDisplay().setMeta(getMeta());
+		frame.getBotDisplay().getTowerMetaDisplay().setFocused();
+		frame.getBotDisplay().getTowerMetaDisplay().setMeta(getMeta());
 	}
 
 	public boolean containsPoint(Point p) {

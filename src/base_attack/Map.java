@@ -7,9 +7,11 @@ public class Map implements Updateable {
 	private final Tile[][] fields;
 	private final List<Mob> mobs = new ArrayList<Mob>();
 	private final List<Bullet> bullets = new ArrayList<Bullet>();
+	private final Game game;
 	private Path mobPath;
 	
-	public Map(int width, int height) {
+	public Map(Game game, int width, int height) {
+		this.game = game;
 		this.fields = new Tile[width][height];
 		for(int x = 0; x < width; x++)
 			for(int y = 0; y < height; y++)
@@ -82,8 +84,10 @@ public class Map implements Updateable {
 				
 				m.update(t);
 				
-				if(m.isDead())
+				if(m.shouldBeRemoved()) {
+					m.onRemove(getGame());
 					it.remove();
+				}
 				
 			}
 			
@@ -94,4 +98,9 @@ public class Map implements Updateable {
 	public List<Bullet> getBullets() {
 		return bullets;
 	}
+	
+	public Game getGame() {
+		return game;
+	}
+	
 }
