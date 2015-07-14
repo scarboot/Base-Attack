@@ -11,8 +11,8 @@ public class Game {
 	private final MobSpawner spawner = new MobSpawner(this);
 	
 	private final TowerMeta<?>[] towerMetas = new TowerMeta<?>[]{
-			new TowerMeta<SlingTower>(this, "Sling Tower", 10, SlingBullet.DAMAGE, SlingTower.RANGE, SlingTower.class),
-			new TowerMeta<MPTower>(this, "MP Tower", 35, MPBullet.DAMAGE, MPTower.RANGE, MPTower.class),
+			new TowerMeta<SlingTower>(this, "Sling Tower", 10, SlingTower.class),
+			new TowerMeta<MPTower>(this, "MP Tower", 35, MPTower.class),
 	};
 	
 	private Base base;

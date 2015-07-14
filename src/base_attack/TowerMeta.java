@@ -12,19 +12,23 @@ public class TowerMeta<T extends Tower> {
 	private final BufferedImage imageColored, imageGrey;
 	private final String name;
 	private final int price;
-	private final double damage;
-	private final double range;
+	private final double damage, cooldown, range;
 	private final Class<T> clazz;
 	
-	public TowerMeta(Game game, String name, int price, double damage, double range, Class<T> clazz) {
+	public TowerMeta(Game game, String name, int price, double damage, double cooldown, double range, Class<T> clazz) {
 		this.game = game;
 		this.imageColored = Images.loadImage(clazz.getSimpleName());
 		this.imageGrey = Images.loadImage(clazz.getSimpleName() + "Grey");
 		this.name = name;
 		this.price = price;
 		this.damage = damage;
+		this.cooldown = cooldown;
 		this.range = range;
 		this.clazz = clazz;
+	}
+	
+	public TowerMeta(Game game, String name, int price, Class<T> clazz) {
+		this(game, name, price, getDamage(clazz), getCooldown(clazz), getRange(clazz), clazz);
 	}
 
 	public void placeChecked(int x, int y) {
@@ -111,6 +115,38 @@ public class TowerMeta<T extends Tower> {
 
 	public Color getColor() {
 		return canBuy() ? Color.GREEN.darker() : Color.RED.darker();
+	}
+
+	public double getCooldown() {
+		return cooldown;
+	}
+
+	private static double getRange(Class<?> c) {
+		try {
+			return (double) c.getDeclaredField("RANGE").get(null);
+		} catch (Exception e) {
+			throw new RuntimeException("Exception while getting 'RANGE' of " + c.getSimpleName(), e);
+		}
+	}
+
+	private static double getCooldown(Class<?> c) {
+		try {
+			return (double) c.getDeclaredField("COOLDOWN").get(null);
+		} catch (Exception e) {
+			throw new RuntimeException("Exception while getting 'COOLDOWN' of " + c.getSimpleName(), e);
+		}
+	}
+
+	private static double getDamage(Class<?> c) {
+		try {
+			return Double.parseDouble(String.valueOf(getBulletClass(c).getDeclaredField("DAMAGE").get(null)));
+		} catch (Exception e) {
+			throw new RuntimeException("Exception while getting 'DAMAGE' of " + c.getSimpleName(), e);
+		}
+	}
+
+	private static Class<?> getBulletClass(Class<?> c) throws ClassNotFoundException {
+		return Class.forName(c.getName().replace("Tower", "Bullet"));
 	}
 
 }
