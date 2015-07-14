@@ -11,11 +11,12 @@ public class TowerMeta<T extends Tower> {
 	private final Game game;
 	private final BufferedImage imageColored, imageGrey;
 	private final String name;
-	private final int price, damage;
+	private final int price;
+	private final double damage;
 	private final double range;
 	private final Class<T> clazz;
 	
-	public TowerMeta(Game game, String name, int price, int damage, double range, Class<T> clazz) {
+	public TowerMeta(Game game, String name, int price, double damage, double range, Class<T> clazz) {
 		this.game = game;
 		this.imageColored = Images.loadImage(clazz.getSimpleName());
 		this.imageGrey = Images.loadImage(clazz.getSimpleName() + "Grey");
@@ -88,7 +89,7 @@ public class TowerMeta<T extends Tower> {
 		return imageGrey;
 	}
 	
-	public int getDamage() {
+	public double getDamage() {
 		return damage;
 	}
 	

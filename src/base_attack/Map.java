@@ -47,6 +47,10 @@ public class Map implements Updateable {
 	public void setMobPath(Path mobPath) {
 		this.mobPath = mobPath;
 	}
+	
+	public Tile getTile(int x, int y) {
+		return fields[x][y];
+	}
 
 	@Override
 	public void update(double t) {
