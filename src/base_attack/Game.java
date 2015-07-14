@@ -15,7 +15,7 @@ public class Game {
 	};
 	
 	private Base base;
-	private int money = 20;
+	private int money = 30;
 	
 	public Game() {
 		
