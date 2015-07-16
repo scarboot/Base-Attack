@@ -2,10 +2,10 @@ package base_attack;
 
 public class SlingTower extends Tower {
 	
-	public static final double RANGE = 4.5;
+	public static final double RANGE = 4.5, COOLDOWN = 4;
 
 	public SlingTower(Game game, Tile tile) {
-		super(game, tile, 5, RANGE);
+		super(game, tile, COOLDOWN, RANGE);
 	}
 
 	@Override

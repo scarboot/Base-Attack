@@ -21,13 +21,15 @@ public class TowerMetaDisplay extends Container implements Spot {
 	FONT_WIDTH = FONT_HEIGHT*2/3;
 	
 	public static final double
-	fontHeightActual = FONT_HEIGHT*2/3d;
+	fontHeightActual = FONT_HEIGHT*2/3d,
+	SCALING = 1;
 	
 	public static final Font FONT = new Font("Arial", Font.BOLD, FONT_HEIGHT);
 	
 	public static final BufferedImage
 	RANGE = Images.loadImage("Range"),
-	DAMAGE = Images.loadImage("Damage");
+	DAMAGE = Images.loadImage("Damage"),
+	CLOCK = Images.loadImage("Clock");
 	
 	public static final int
 	LINE_HEIGHT = 50,
@@ -67,7 +69,10 @@ public class TowerMetaDisplay extends Container implements Spot {
 			
 			g.translate(0, FONT_HEIGHT_AND_GAP); //TRANSLATE
 			
-		}	
+		}
+		
+		g = (Graphics2D) g.create();
+		g.scale(SCALING, SCALING);
 		
 		{//PRICE
 			
@@ -79,18 +84,28 @@ public class TowerMetaDisplay extends Container implements Spot {
 			
 			g.translate(WIDTH_SPACE, 0); //TRANSLATE
 			
-		}	
+		}
 		
 		{//DAMAGE
 			
 			Display.drawInCenter(g, DAMAGE, LINE_HEIGHT);
 			
-			drawString(g, meta.getDamage(), HEIGHT_AND_GAP, STRING_HEIGHT);
+			drawString(g, meta.getDamage()/meta.getCooldown(), HEIGHT_AND_GAP, STRING_HEIGHT);
+			
+			g.translate(WIDTH_SPACE + GAP, 0); //TRANSLATE
+			
+		}
+		/*
+		{//COOLDOWN
+			
+			Display.drawInCenter(g, CLOCK, LINE_HEIGHT);
+			
+			drawString(g, meta.getCooldown(), HEIGHT_AND_GAP, STRING_HEIGHT);
 			
 			g.translate(WIDTH_SPACE, 0); //TRANSLATE
 			
-		}	
-		
+		}
+		*/
 		{//RANGE
 			
 			Display.drawInCenter(g, RANGE, LINE_HEIGHT);
