@@ -6,13 +6,15 @@ import java.util.Iterator;
 
 public class ButtonBoundsIterator implements Iterator<Rectangle> {
 	
+	private final Dimension concreteSize;
 	private final Rectangle pattern;
 	private final int gap;
 	
-	public ButtonBoundsIterator(int gap, Dimension size) {
+	public ButtonBoundsIterator(int gap, Dimension area, Dimension concreteSize) {
 
-		this.pattern = new Rectangle(gap, gap, size.width, size.height);
+		this.pattern = new Rectangle(gap, gap, area.width, area.height);
 		this.gap = gap;
+		this.concreteSize = concreteSize;
 		
 	}
 
@@ -24,9 +26,15 @@ public class ButtonBoundsIterator implements Iterator<Rectangle> {
 	@Override
 	public Rectangle next() {
 		
-		final Rectangle r = new Rectangle(pattern);
+		final int middleX = pattern.x + pattern.width/2;
+		final int middleY = pattern.y + pattern.height/2;
 		
-		pattern.x += r.width + gap;
+		final int buttonX = middleX - concreteSize.width/2;
+		final int buttonY = middleY - concreteSize.height/2;
+		
+		final Rectangle r = new Rectangle(buttonX, buttonY, concreteSize.width, concreteSize.height);
+		
+		pattern.x += pattern.width + gap;
 		
 		return r;
 		

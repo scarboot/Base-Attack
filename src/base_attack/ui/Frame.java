@@ -3,6 +3,7 @@ package base_attack.ui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
@@ -11,6 +12,7 @@ import javax.swing.JFrame;
 
 import base_attack.Bullet;
 import base_attack.Game;
+import base_attack.MapGenerator;
 import base_attack.Mob;
 import base_attack.Tile;
 import base_attack.Updateable;
@@ -33,6 +35,7 @@ public class Frame extends JFrame implements Updateable {
 		super("Base Attack");
 		
 		this.game = game;
+		game.setFrame(this);
 		
 		this.width = width;
 		this.gameHeight = gameHeight;
@@ -189,6 +192,25 @@ public class Frame extends JFrame implements Updateable {
 
 	public Rectangle getGameArea() {
 		return gameArea;
+	}
+
+	public Tile getTileUnderMouse() {
+		
+		final Point pos = new Point(Mouse.getPos());
+		
+		if(!getGameArea().contains(pos))
+			return null;
+		
+		pos.translate(0, -getTopDisplay().getTotalHeight());
+		
+		final int x = pos.x / Tile.SIZE;
+		final int y = pos.y / Tile.SIZE;
+		
+		if(!(x >= 0 && x < MapGenerator.X && y >= 0 && y < MapGenerator.Y)) //Should be useless
+			return null;
+		
+		return getGame().getMap().getTiles()[x][y];
+		
 	}
 
 }

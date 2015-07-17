@@ -1,6 +1,5 @@
 package base_attack;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 
@@ -30,37 +29,8 @@ public class TowerMeta<T extends Tower> {
 	public TowerMeta(Game game, String name, int price, Class<T> clazz) {
 		this(game, name, price, getDamage(clazz), getCooldown(clazz), getRange(clazz), clazz);
 	}
-
-	public void placeChecked(int x, int y) {
-		
-		if(!canPlace(x, y))
-			throw new IllegalArgumentException();
-		
-		buyUnchecked();
-		
-		placeUnchecked(getGame().getMap().getTiles()[x][y]);
-		
-	}
 	
-	private void buyUnchecked() {
-		
-		getGame().removeMoney(getPrice());
-		
-	}
-
-	public boolean isAllowed(int x, int y) {
-		return canBuy() && canPlace(x, y);
-	}
-	
-	public boolean canPlace(int x, int y) {
-		return getGame().getMap().getTiles()[x][y].canBuildTower();
-	}
-
-	public boolean canBuy() {
-		return getGame().getMoney() >= getPrice();
-	}
-	
-	protected void placeUnchecked(Tile tile) {
+	public void placeUnchecked(Tile tile) {
 		
 		final T tower = generateTower(game, tile);
 		
@@ -72,8 +42,8 @@ public class TowerMeta<T extends Tower> {
 		
 		try {
 			
-			Constructor<T> constructor = clazz.getConstructor(Game.class, Tile.class);
-			return constructor.newInstance(game, tile);
+			Constructor<T> constructor = clazz.getConstructor(Game.class, Tile.class, TowerMeta.class);
+			return constructor.newInstance(game, tile, this);
 			
 		} catch (Exception e) {
 			throw new RuntimeException("Error while contructing a " + clazz.getSimpleName() + " with reflection", e);
@@ -81,7 +51,7 @@ public class TowerMeta<T extends Tower> {
 		
 	}
 
-	public int getPrice() {
+	public int getPriceSimpel() {
 		return price;
 	}
 	
@@ -109,12 +79,8 @@ public class TowerMeta<T extends Tower> {
 		return game;
 	}
 
-	public BufferedImage getImage() {
-		return canBuy() ? getImageColored() : getImageGrey();
-	}
-
-	public Color getColor() {
-		return canBuy() ? Color.GREEN.darker() : Color.RED.darker();
+	public BufferedImage getImage(boolean canBuy) {
+		return canBuy ? getImageColored() : getImageGrey();
 	}
 
 	public double getCooldown() {
@@ -147,6 +113,10 @@ public class TowerMeta<T extends Tower> {
 
 	private static Class<?> getBulletClass(Class<?> c) throws ClassNotFoundException {
 		return Class.forName(c.getName().replace("Tower", "Bullet"));
+	}
+
+	public boolean canBuySimpel() {
+		return getGame().getMoney() >= getPriceSimpel();
 	}
 
 }

@@ -18,7 +18,7 @@ public class Base extends Tower {
 
 	public Base(Game game, Tile tile) {
 		
-		super(game, tile, Double.POSITIVE_INFINITY, 0, 0);
+		super(game, tile, Double.POSITIVE_INFINITY, 0, 0, null);
 		
 		game.setBase(this);
 		

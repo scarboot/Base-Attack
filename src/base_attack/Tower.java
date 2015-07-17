@@ -7,6 +7,8 @@ import base_attack.ui.Images;
 
 public abstract class Tower implements Updateable {
 	
+	public static final BufferedImage REPLACE_INDICATOR = Images.loadImage("ReplaceIndicator");
+	
 	private final BufferedImage image;
 	
 	private final Game game;
@@ -14,14 +16,16 @@ public abstract class Tower implements Updateable {
 	private final Cooldown cooldown;
 	private final double range;
 	private final int refund;
+	private final TowerMeta<? extends Tower> meta;
 	
-	public Tower(Game game, Tile tile, double cooldown, double range, int refund) {
+	public Tower(Game game, Tile tile, double cooldown, double range, int refund, TowerMeta<? extends Tower> meta) {
 		
 		this.game = game;
 		this.tile = tile;
 		this.cooldown = new Cooldown(cooldown);
 		this.range = range;
 		this.refund = refund;
+		this.meta = meta;
 		
 		image = Images.loadImage(getClass().getSimpleName());
 	}
@@ -93,7 +97,19 @@ public abstract class Tower implements Updateable {
 		final int y = getTile().y * Tile.SIZE;
 		
 		g.drawImage(getImage(), x, y, null);
+		
+		if(canBeReplacedBy(getGame().getFrame().getBotDisplay().getTowerMetaDisplay().getMeta()))
+			g.drawImage(REPLACE_INDICATOR, x, y, null);
 
+	}
+
+	private boolean canBeReplacedBy(TowerMeta<?> meta) {
+		
+		if(getMeta() == null || meta == null)
+			return false;
+		
+		return getMeta().getPriceSimpel() < meta.getPriceSimpel() && ((meta.getPriceSimpel() - getRefund()) <= getGame().getMoney());
+		
 	}
 
 	public boolean exists() {
@@ -109,6 +125,10 @@ public abstract class Tower implements Updateable {
 		getTile().destroy(this);
 		getGame().addMoney(getRefund());
 		
+	}
+
+	public TowerMeta<? extends Tower> getMeta() {
+		return meta;
 	}
 	
 }

@@ -1,6 +1,7 @@
 package base_attack.ui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -68,6 +69,23 @@ public abstract class Button extends Component implements Updateable {
 	
 	public BufferedImage getImage() {
 		throw null;
+	}
+
+	public final void drawButtonInformation(Graphics2D g, Dimension size, int y) {
+		
+		final int middleX = this.x + width/2;
+		final int middleY = this.y + height/2 + y;
+
+		final int drawX = middleX - size.width/2;
+		final int drawY = middleY - size.height/2;
+		
+		final Graphics2D subG = (Graphics2D) g.create(drawX, drawY, size.width, size.height);
+		
+		drawButtonInfo(subG, size);
+		
+	}
+
+	protected void drawButtonInfo(Graphics2D g, Dimension d) {
 	}
 
 }

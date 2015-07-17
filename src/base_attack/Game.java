@@ -15,8 +15,9 @@ public class Game {
 			new TowerMeta<MPTower>(this, "MP Tower", 35, MPTower.class),
 	};
 	
+	private Frame frame;
 	private Base base;
-	private int money = 30;
+	private int money = 30 + 30;
 	
 	public Game() {
 		
@@ -154,6 +155,18 @@ public class Game {
 	
 	public boolean isGameOver() {
 		return getBase().isDead();
+	}
+
+	public Frame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(Frame frame) {
+		
+		if(getFrame() != null)
+			throw new IllegalStateException();
+		
+		this.frame = frame;
 	}
 	
 }

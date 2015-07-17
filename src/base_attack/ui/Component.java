@@ -29,7 +29,7 @@ public abstract class Component extends Rectangle {
 	}
 	
 	public void onInstall(Component c){};
-	public abstract void drawContent(Graphics2D g);
+	protected abstract void drawContent(Graphics2D g);
 	
 	public final void draw(Graphics2D g) {
 		

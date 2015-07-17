@@ -3,6 +3,7 @@ package base_attack.ui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import base_attack.TowerMeta;
 import base_attack.Updateable;
@@ -31,10 +32,31 @@ public class TowerButton extends Button implements Updateable {
 		g.setColor(Color.BLACK);
 		g.fillRect(-gap, -gap, width-TOWER_BUTTON_FREE_GAP*2+gap*2, height-TOWER_BUTTON_FREE_GAP*2+gap*2);
 		
-		g.setColor(meta.canBuy() ? Color.WHITE : Color.GRAY);
+		g.setColor(getBgColor());
 		g.fillRect(0, 0, width-TOWER_BUTTON_FREE_GAP*2, height-TOWER_BUTTON_FREE_GAP*2);
 		
-		g.drawImage(meta.getImage(), 0, 0, null);
+		g.drawImage(getImage(), 0, 0, null);
+		
+	}
+
+	private Color getBgColor() {
+		
+		if(TowerMetaDisplay.canReplaceTower(frame, getMeta()) || frame.getBotDisplay().getDisplaySpot().getPlacedTowerDisplay().canReplaceTower(getMeta()))
+			return Color.GREEN;
+		
+		if(meta.canBuySimpel())
+			return Color.WHITE;
+		
+		return Color.GRAY;
+		
+	}
+	
+	public BufferedImage getImage() {
+		
+		if(TowerMetaDisplay.canReplaceTower(frame, getMeta())/* || frame.getBotDisplay().getDisplaySpot().getPlacedTowerDisplay().canReplaceTower(getMeta())*/)
+			return meta.getImageColored();
+		
+		return meta.getImage(meta.canBuySimpel());
 		
 	}
 

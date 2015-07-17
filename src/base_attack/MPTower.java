@@ -5,8 +5,8 @@ public class MPTower extends Tower {
 	public static final int PRICE = 35;
 	public static final double RANGE = 2.5, COOLDOWN = 0.5;
 
-	public MPTower(Game game, Tile tile) {
-		super(game, tile, COOLDOWN, RANGE, PRICE/2);
+	public MPTower(Game game, Tile tile, TowerMeta<? extends MPTower> meta) {
+		super(game, tile, COOLDOWN, RANGE, PRICE/2, meta);
 	}
 
 	@Override

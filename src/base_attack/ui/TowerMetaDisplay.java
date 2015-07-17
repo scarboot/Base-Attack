@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 
 import base_attack.MapGenerator;
 import base_attack.Tile;
+import base_attack.Tower;
 import base_attack.TowerMeta;
 import static base_attack.ui.Display.GAP;
 
@@ -61,13 +62,17 @@ public class TowerMetaDisplay extends Component implements Spot {
 		if(meta == null)
 			return;
 		
+		g.translate(GAP, GAP);
+		
 		g.setColor(Color.BLACK);
 		
 		{//NAME
 			
-			g.setColor(meta.getColor().darker());
+			final String name = getName();
 			
-			drawString(g, meta.getName(), 0, FONT_HEIGHT_AND_GAP/2);
+			g.setColor(getColor().darker());
+			
+			drawString(g, name, 0, FONT_HEIGHT_AND_GAP/2);
 			
 			g.translate(0, FONT_HEIGHT_AND_GAP); //TRANSLATE
 			
@@ -80,8 +85,8 @@ public class TowerMetaDisplay extends Component implements Spot {
 			
 			Display.drawInCenter(g, TopDisplay.MONEY, LINE_HEIGHT);
 			
-			g.setColor(meta.getColor());
-			drawString(g, meta.getPrice(), HEIGHT_AND_GAP, STRING_HEIGHT);
+			g.setColor(getColor());
+			drawString(g, getPrice(), HEIGHT_AND_GAP, STRING_HEIGHT);
 			g.setColor(Color.BLACK);
 			
 			g.translate(WIDTH_SPACE, 0); //TRANSLATE
@@ -92,7 +97,7 @@ public class TowerMetaDisplay extends Component implements Spot {
 			
 			Display.drawInCenter(g, DAMAGE, LINE_HEIGHT);
 			
-			drawString(g, meta.getDamage()/meta.getCooldown(), HEIGHT_AND_GAP, STRING_HEIGHT);
+			drawString(g, (meta.getDamage()/meta.getCooldown())*10, LINE_HEIGHT + GAP/2, STRING_HEIGHT);
 			
 			g.translate(WIDTH_SPACE + GAP, 0); //TRANSLATE
 			
@@ -117,7 +122,7 @@ public class TowerMetaDisplay extends Component implements Spot {
 		}
 		
 	}
-	
+
 	public static void drawString(Graphics2D g, Object o, int x, int middleY) {
 		
 		g = (Graphics2D) g.create(); //FONT CHANGES SHOULD STAY IN THIS METHOD
@@ -140,17 +145,13 @@ public class TowerMetaDisplay extends Component implements Spot {
 		
 		if(meta != null) {
 			
-			final Point pos = new Point(Mouse.getPos());
-			pos.translate(0, -f.getTopDisplay().getTotalHeight());
+			final Tile tile = f.getTileUnderMouse();
 			
-			final int x = pos.x / Tile.SIZE;
-			final int y = pos.y / Tile.SIZE;
-			
-			if(!(x >= 0 && x < MapGenerator.X && y >= 0 && y < MapGenerator.Y))
+			if(tile == null)
 				return;
 			
-			if(Mouse.isCleanDown() && meta.isAllowed(x, y))
-				meta.placeChecked(x, y);
+			if(Mouse.isCleanDown() && isAllowed(tile))
+				placeChecked(tile);
 			
 		}
 		
@@ -174,12 +175,12 @@ public class TowerMetaDisplay extends Component implements Spot {
 			if(!(x >= 0 && x < MapGenerator.X && y >= 0 && y < MapGenerator.Y)) //Should be useless
 				return;
 			
-			final Color c = meta.isAllowed(x, y) ? new Color(0, 1f, 0, 0.3f) : new Color(1f, 0, 0, 0.3f);
+			final Color c = isAllowed(x, y) ? new Color(0, 1f, 0, 0.3f) : new Color(1f, 0, 0, 0.3f);
 			
 			final int drawX = x*Tile.SIZE, drawY = y*Tile.SIZE;
 			
 			g.setColor(c);
-			g.drawImage(meta.getImage(), drawX, drawY, null);
+			g.drawImage(meta.getImage(canBuy()), drawX, drawY, null);
 			g.fillRect(drawX, drawY, Tile.SIZE, Tile.SIZE);
 			
 			final int rangeBeginX = (int)((x + 0.5 - meta.getRange())*Tile.SIZE);
@@ -202,6 +203,108 @@ public class TowerMetaDisplay extends Component implements Spot {
 	@Override
 	public void setFocused() {
 		f.getBotDisplay().getDisplaySpot().setContent(this);
+	}
+
+	public void placeChecked(int x, int y) {
+		placeChecked(f.getGame().getMap().getTile(x, y));
+	}
+
+	public void placeChecked(Tile tile) {
+		
+		if(!canPlace(tile))
+			throw new IllegalArgumentException();
+		
+		buyUnchecked();
+		
+		getMeta().placeUnchecked(tile);
+		
+	}
+
+	private void buyUnchecked() {
+		
+		f.getGame().removeMoney(getPrice());
+		
+	}
+
+	public boolean isAllowed(int x, int y) {
+		
+		return isAllowed(f.getGame().getMap().getTile(x, y));
+	}
+
+	private Tower getReplaceableTower() {
+		return getReplaceableTower(f, getMeta());		
+	}
+
+	public static Tower getReplaceableTower(Frame f, TowerMeta<?> meta) {
+		
+		if(meta == null)
+			return null;
+		
+		final Tile t = f.getTileUnderMouse();
+		
+		if(t == null || !t.hasTower() || t.getTower() == f.getGame().getBase() || t.getTower().getMeta() == null || t.getTower().getMeta().getPriceSimpel() >= meta.getPriceSimpel())
+			return null;
+		
+		return t.getTower();
+		
+	}
+
+	public boolean isAllowed(Tile tile) {
+		return canBuy() && canPlace(tile);
+	}
+	
+	public boolean canPlace(int x, int y) {
+		return canPlace(f.getGame().getMap().getTile(x, y));
+	}
+	
+	private boolean canPlace(Tile tile) {
+		return tile.canBuildTower() || getReplaceableTower() != null;
+	}
+
+	public Color getColor() {
+		return canBuy() ? Color.GREEN.darker() : Color.RED.darker();
+	}
+	
+	public boolean canBuy() {
+		return canBuy(f, getMeta());
+	}
+
+	private String getName() {
+		
+		final Tower t = getReplaceableTower();
+		
+		if(t == null)
+			return getMeta().getName();
+		else
+			return t.getMeta().getName() + " => " + getMeta().getName();
+		
+	}
+	
+	private int getPrice() {
+		return getPrice(f, getMeta());
+	}
+	
+	public boolean canReplaceTower() {
+		return getReplaceableTower() != null && canBuy();
+	}
+
+	public static boolean canReplaceTower(Frame frame, TowerMeta<?> meta) {
+		return getReplaceableTower(frame, meta) != null && canBuy(frame, meta);
+	}
+	
+	public static boolean canBuy(Frame f, TowerMeta<?> meta) {
+		return getPrice(f, meta) <= f.getGame().getMoney();
+	}
+	
+	private static int getPrice(Frame f, TowerMeta<?> meta) {
+		
+		final Tower t = getReplaceableTower(f, meta);
+		
+		if(t == null)
+			return meta.getPriceSimpel();
+		else
+			return meta.getPriceSimpel() - t.getRefund();
+		
 	}
 
 }
