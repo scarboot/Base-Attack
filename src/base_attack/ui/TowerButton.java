@@ -2,22 +2,23 @@ package base_attack.ui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.Rectangle;
 
 import base_attack.TowerMeta;
 import base_attack.Updateable;
 import static base_attack.ui.BotDisplay.TOWER_BUTTON_FREE_GAP;
 
-public class TowerButton extends Container implements Updateable {
+public class TowerButton extends Button implements Updateable {
 	
 	private static final long serialVersionUID = 1L;
 	
 	private final Frame frame;
 	private final TowerMeta<?> meta;
-	
-	public TowerButton(TowerMeta<?> meta, Frame frame) {
-		this.meta = meta;
+
+	public TowerButton(Position parent, Rectangle bounds, Frame frame, TowerMeta<?> meta) {
+		super(parent, bounds);
 		this.frame = frame;
+		this.meta = meta;
 	}
 
 	@Override
@@ -44,37 +45,15 @@ public class TowerButton extends Container implements Updateable {
 	public boolean isFocued() {
 		return frame.getBotDisplay().getTowerMetaDisplay().getMeta() == getMeta();
 	}
-
+	
 	@Override
-	public void update(double t) {
-		
-		synchronized (Mouse.getEvents()) {
-			
-			for(MouseHandleEvent e: Mouse.getEvents(MouseEventType.CLICK)) {
-				
-				if(!Mouse.isClean(e.event))
-					continue;
-				
-				if(containsPoint(e.event.getPoint()))
-					focus();
-				
-			}
-			
-		}
-		
+	public void onClick() {
+		focus();
 	}
 	
 	private void focus() {
 		frame.getBotDisplay().getTowerMetaDisplay().setFocused();
 		frame.getBotDisplay().getTowerMetaDisplay().setMeta(getMeta());
-	}
-
-	public boolean containsPoint(Point p) {
-		
-		Point p2 = new Point(p);
-		p2.translate(-pos.getX()+x, -pos.getY()+y);
-		return super.contains(p2);
-		
 	}
 
 }

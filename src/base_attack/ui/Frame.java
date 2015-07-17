@@ -38,7 +38,7 @@ public class Frame extends JFrame implements Updateable {
 		this.gameHeight = gameHeight;
 		
 		this.topDisplay = new TopDisplay(this);
-		this.botDisplay = new BotDisplay(this, 0, topDisplay.getTotalHeight() + gameHeight);
+		this.botDisplay = new BotDisplay(this, topDisplay.getTotalHeight() + gameHeight);
 		
 		this.height = topDisplay.getTotalHeight() + gameHeight + botDisplay.getTotalHeight();
 		
@@ -102,9 +102,8 @@ public class Frame extends JFrame implements Updateable {
 		
 		Graphics2D subG;
 		
-		//Top display
-		subG = (Graphics2D) g.create(topDisplay.getX(), topDisplay.getY(), width, topDisplay.getTotalHeight());
-		topDisplay.draw(subG);
+		//Top Display
+		getTopDisplay().draw(g);
 		
 		//Game
 		subG = (Graphics2D) g.create(0, topDisplay.getTotalHeight(), width, gameHeight);
@@ -113,15 +112,16 @@ public class Frame extends JFrame implements Updateable {
 		//Tower Building
 		drawDisplaySpot(subG);
 		
-		//Bottom menu
-		subG = (Graphics2D) g.create(botDisplay.getX(), botDisplay.getY(), width, botDisplay.getTotalHeight());
-		botDisplay.draw(subG);
+		//Bottom Display
+		getBotDisplay().draw(g);
 		
 		//Game Over (Game Graphics)
-		subG = (Graphics2D) g.create(0, topDisplay.getTotalHeight(), width, gameHeight);
-		
-		if(getGame().isGameOver())
+		if(getGame().isGameOver()) {
+			
+			subG = (Graphics2D) g.create(0, topDisplay.getTotalHeight(), width, gameHeight);
 			drawGameOver(subG);
+			
+		}
 		
 	}
 

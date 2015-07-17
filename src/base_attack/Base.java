@@ -18,7 +18,7 @@ public class Base extends Tower {
 
 	public Base(Game game, Tile tile) {
 		
-		super(game, tile, Double.POSITIVE_INFINITY, 0);
+		super(game, tile, Double.POSITIVE_INFINITY, 0, 0);
 		
 		game.setBase(this);
 		
@@ -67,6 +67,11 @@ public class Base extends Tower {
 
 	public boolean isDead() {
 		return hits >= MAX_HITS;
+	}
+	
+	@Override
+	public void destroy() {
+		throw new UnsupportedOperationException();
 	}
 	
 }

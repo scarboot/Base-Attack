@@ -13,13 +13,15 @@ public abstract class Tower implements Updateable {
 	private final Tile tile;	
 	private final Cooldown cooldown;
 	private final double range;
+	private final int refund;
 	
-	public Tower(Game game, Tile tile, double cooldown, double range) {
+	public Tower(Game game, Tile tile, double cooldown, double range, int refund) {
 		
 		this.game = game;
 		this.tile = tile;
 		this.cooldown = new Cooldown(cooldown);
 		this.range = range;
+		this.refund = refund;
 		
 		image = Images.loadImage(getClass().getSimpleName());
 	}
@@ -92,6 +94,21 @@ public abstract class Tower implements Updateable {
 		
 		g.drawImage(getImage(), x, y, null);
 
+	}
+
+	public boolean exists() {
+		return getTile().getTower() == this;
+	}
+
+	public int getRefund() {
+		return refund;
+	}
+
+	public void destroy() {
+		
+		getTile().destroy(this);
+		getGame().addMoney(getRefund());
+		
 	}
 	
 }

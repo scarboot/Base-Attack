@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
@@ -12,7 +13,7 @@ import base_attack.Tile;
 import base_attack.TowerMeta;
 import static base_attack.ui.Display.GAP;
 
-public class TowerMetaDisplay extends Container implements Spot {
+public class TowerMetaDisplay extends Component implements Spot {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -40,8 +41,9 @@ public class TowerMetaDisplay extends Container implements Spot {
 	
 	private final Frame f;
 	private TowerMeta<?> meta;
-	
-	public TowerMetaDisplay(Frame f) {
+
+	public TowerMetaDisplay(Frame f, Position parent, Rectangle bounds) {
+		super(parent, bounds);
 		this.f = f;
 	}
 
@@ -190,11 +192,6 @@ public class TowerMetaDisplay extends Container implements Spot {
 			
 		}
 		
-	}
-
-	@Override
-	public Position getPos() {
-		return pos;
 	}
 
 	@Override

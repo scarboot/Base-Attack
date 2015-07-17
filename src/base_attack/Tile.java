@@ -64,5 +64,14 @@ public class Tile {
 		return !hasTower() && getType() == TileType.STONE;
 		
 	}
+
+	public void destroy(Tower t) {
+		
+		if(getTower() != t)
+			throw new IllegalArgumentException();
+		
+		setTower(null);
+		
+	}
     
 }

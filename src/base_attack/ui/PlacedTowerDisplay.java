@@ -1,27 +1,60 @@
 package base_attack.ui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.Iterator;
 
 import base_attack.MapGenerator;
 import base_attack.Tile;
 import base_attack.Tower;
 
-public class PlacedTowerDisplay extends Container implements Spot {
+public class PlacedTowerDisplay extends Component implements Spot {
 	
 	private static final long serialVersionUID = 1L;
 	
 	public static final BufferedImage SELECTED = Images.loadImage("Selected");
 	
+	public static final int BUTTON_SIZE = 50 + 2*1;
+	
 	private final Frame f;
+	private final Button[] buttons;
 	
 	private Tower tower;
 	
-	public PlacedTowerDisplay(Frame f) {
+	public PlacedTowerDisplay(Frame f, Position parent, Rectangle bounds) {
+		
+		super(parent, bounds);
+		
 		this.f = f;
+		
+		buttons = createButtons();
+		
+	}
+
+	private Button[] createButtons() {
+		
+		if(getButtons() != null)
+			throw new IllegalStateException();
+		
+		final Iterator<Rectangle> buttonBoundsIterator = getButtonBoundsIterator();
+		
+		final Button[] buttons = new Button[]{
+
+				new DestroyButton(buttonBoundsIterator.next(), this, f)
+				
+		};
+		
+		return buttons;
+		
+	}
+
+	private Iterator<Rectangle> getButtonBoundsIterator() {
+		return new ButtonBoundsIterator(Display.GAP, new Dimension(BUTTON_SIZE, BUTTON_SIZE));
 	}
 
 	@Override
@@ -30,12 +63,25 @@ public class PlacedTowerDisplay extends Container implements Spot {
 		if(getTower() == null)
 			return;
 		
-		g.setColor(Color.BLACK);
-		Display.drawStringCentered(g, "Comming Soon", width/2, height/2);
+		for(Button b: getButtons())
+			b.draw(g);
 		
 	}
 
 	public void update(double t) {
+		
+		checkTowerFocus();
+		
+		if(isFocused())
+			for(Button b: getButtons())
+				b.update(t);
+		
+	}
+	
+	private void checkTowerFocus() {
+		
+		if(tower != null && !tower.exists())
+			setTower(null);
 		
 		if(Keyboard.isKeyDown(KeyEvent.VK_ESCAPE) || Mouse.isMeta() || !isFocused())
 			setTower(null);
@@ -54,7 +100,10 @@ public class PlacedTowerDisplay extends Container implements Spot {
 			if(!(x >= 0 && x < MapGenerator.X && y >= 0 && y < MapGenerator.Y))
 				return;
 			
-			final Tower tower = f.getGame().getMap().getTiles()[x][y].getTower();
+			Tower tower = f.getGame().getMap().getTiles()[x][y].getTower();
+			
+			if(tower == f.getGame().getBase())
+				tower = null;
 			
 			boolean clicked = Mouse.wasCleanDown();
 			
@@ -70,7 +119,7 @@ public class PlacedTowerDisplay extends Container implements Spot {
 		}
 		
 	}
-	
+
 	public void drawOnGameBoard(Graphics2D g) {
 		
 		if(getTower() == null)
@@ -103,11 +152,6 @@ public class PlacedTowerDisplay extends Container implements Spot {
 	}
 
 	@Override
-	public Position getPos() {
-		return pos;
-	}
-
-	@Override
 	public boolean isFocused() {
 		return f.getBotDisplay().getDisplaySpot().getContent() == this;
 	}
@@ -115,6 +159,14 @@ public class PlacedTowerDisplay extends Container implements Spot {
 	@Override
 	public void setFocused() {
 		f.getBotDisplay().getDisplaySpot().setContent(this);
+	}
+
+	public boolean hasTower() {
+		return getTower() != null;
+	}
+	
+	public Button[] getButtons() {
+		return buttons;
 	}
 
 }

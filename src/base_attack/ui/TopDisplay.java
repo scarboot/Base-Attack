@@ -5,7 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class TopDisplay extends Display {
-
+	
+	private static final long serialVersionUID = 1L;
+	
 	public static final BufferedImage
 	MONEY = Images.loadImage("Money"),
 	CLOCK = Images.loadImage("Clock"),
@@ -14,8 +16,9 @@ public class TopDisplay extends Display {
 	public TopDisplay(Frame f) {
 		super(f, 60);
 	}
-	
-	public void draw(Graphics2D g) {
+
+	@Override
+	public void drawContent(Graphics2D g) {
 		
 		drawBorder(g);
 		
@@ -33,12 +36,12 @@ public class TopDisplay extends Display {
 		//DRAW MOBS
 		if(getGame().getSpawner().isPause()) {
 			
-			drawInCenter(g, CLOCK, getFrame().width - space(), 0, height(), height());
-			drawString(g, getGame().getSpawner().formatTime(), getFrame().width - (space() + FONT_WIDTH*4), middle());
+			drawInCenter(g, CLOCK, getF().width - space(), 0, height(), height());
+			drawString(g, getGame().getSpawner().formatTime(), getF().width - (space() + FONT_WIDTH*4), middle());
 			
 		} else {
 			
-			drawInCenter(g, FIGHT, getFrame().width - space(), 0, height(), height());
+			drawInCenter(g, FIGHT, getF().width - space(), 0, height(), height());
 			
 		}
 		
@@ -47,7 +50,7 @@ public class TopDisplay extends Display {
 	private void drawBorder(Graphics2D g) {
 		
 		g.setColor(Color.BLACK);
-		g.fillRect(0, height(), getFrame().width, BORDER);
+		g.fillRect(0, height(), getF().width, BORDER);
 
 	}
 
