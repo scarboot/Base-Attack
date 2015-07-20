@@ -108,7 +108,7 @@ public abstract class Tower implements Updateable {
 		if(getMeta() == null || meta == null)
 			return false;
 		
-		return getMeta().getPriceSimpel() < meta.getPriceSimpel() && ((meta.getPriceSimpel() - getRefund()) <= getGame().getMoney());
+		return getMeta().getPriceSimpel() < meta.getPriceSimpel() && ((meta.getPriceSimpel() - getUpgradeBenefit()) <= getGame().getMoney());
 		
 	}
 
@@ -116,10 +116,10 @@ public abstract class Tower implements Updateable {
 		return getTile().getTower() == this;
 	}
 
-	public int getRefund() {
-		return refund;
+	public int getUpgradeBenefit() {
+		return getPrice();
 	}
-
+	
 	public void destroy() {
 		
 		getTile().destroy(this);
@@ -129,6 +129,14 @@ public abstract class Tower implements Updateable {
 
 	public TowerMeta<? extends Tower> getMeta() {
 		return meta;
+	}
+	
+	private int getPrice() {
+		return getMeta().getPriceSimpel();
+	}
+	
+	public int getRefund() {
+		return refund;
 	}
 	
 }

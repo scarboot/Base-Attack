@@ -6,7 +6,7 @@ import java.util.LinkedList;
 public class CutThroughBullet extends Bullet {
 	
 	private static final Color c = Color.BLACK;
-	public static final double DAMAGE = 0.75;
+	public static final double DAMAGE = 1;
 	
 	private final LinkedList<Mob> mobsTouched = new LinkedList<>();
 

@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.Locale;
 
 import base_attack.MapGenerator;
 import base_attack.Tile;
@@ -97,7 +98,7 @@ public class TowerMetaDisplay extends Component implements Spot {
 			
 			Display.drawInCenter(g, DAMAGE, LINE_HEIGHT);
 			
-			drawString(g, (meta.getDamage()/meta.getCooldown())*10, LINE_HEIGHT + GAP/2, STRING_HEIGHT);
+			drawString(g, String.format(Locale.ENGLISH, "%.1f", (meta.getDamage()/meta.getCooldown())*10), LINE_HEIGHT + GAP/2, STRING_HEIGHT);
 			
 			g.translate(WIDTH_SPACE + GAP, 0); //TRANSLATE
 			
@@ -303,7 +304,7 @@ public class TowerMetaDisplay extends Component implements Spot {
 		if(t == null)
 			return meta.getPriceSimpel();
 		else
-			return meta.getPriceSimpel() - t.getRefund();
+			return meta.getPriceSimpel() - t.getUpgradeBenefit();
 		
 	}
 

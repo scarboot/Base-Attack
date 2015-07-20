@@ -180,7 +180,7 @@ public class PlacedTowerDisplay extends Component implements Spot {
 		if(getTower() == null || meta == null || getTower().getMeta() == null)
 			return false;
 		
-		return getTower().getMeta().getPriceSimpel() < meta.getPriceSimpel() && (meta.getPriceSimpel() - tower.getRefund()) <= f.getGame().getMoney();
+		return getTower().getMeta().getPriceSimpel() < meta.getPriceSimpel() && (meta.getPriceSimpel() - tower.getUpgradeBenefit()) <= f.getGame().getMoney();
 		
 	}
 

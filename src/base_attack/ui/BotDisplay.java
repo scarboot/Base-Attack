@@ -48,7 +48,7 @@ public class BotDisplay extends Display {
 			
 			towerSelection[i] = button;
 			
-			addX += BUTTON_CONTAINER_SIZE + GAP;
+			addX += BUTTON_CONTAINER_SIZE + GAP/2;
 			
 		}
 		
