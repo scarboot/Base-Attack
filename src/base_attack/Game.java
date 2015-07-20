@@ -169,5 +169,11 @@ public class Game {
 		
 		this.frame = frame;
 	}
+
+	public void onGameEnd() {
+		
+		getFrame().getBotDisplay().getDisplaySpot().setContent(null);
+		
+	}
 	
 }

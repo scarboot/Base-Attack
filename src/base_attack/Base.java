@@ -48,13 +48,24 @@ public class Base extends Tower {
 	
 	public void hit(int i) {
 		
+		if(getGame().isGameOver())
+			return; //Maybe throw exception
+		
 		hits += i;
 		
-		if(hits < 0)
+		if(hits < 0) {
+			
 			hits = 0;
-		else if(hits > MAX_HITS)
+			
+		} else if(hits > MAX_HITS) {
+			
 			hits = MAX_HITS;
-
+			
+		}
+		
+		if(getGame().isGameOver())
+			getGame().onGameEnd();
+		
 	}
 	
 	public void hit() {
