@@ -1,12 +1,23 @@
 package base_attack;
 
+import java.util.Random;
+
 public class MobSpawner implements Updateable {
+
+	private static final MobCreator defaultMobCreator = new MobCreator(Minion.class, 1);
+	
+	private static final MobCreator[] mobCreators = new MobCreator[]{
+		new MobCreator(Tank.class, 0.2),
+		new MobCreator(Racer.class, 0.2)
+	};
+	
+	private final Random r = new Random("BaseAttack".hashCode());
 	
 	private final Game game;
 	private final WaveStatsCalculator calc;
 	private double timePassed;
 	private double timePerSpawn;
-	private int spawned = 0;
+	private int toSpawn;
 	
 	public MobSpawner(Game game) {
 		this.game = game;
@@ -31,7 +42,7 @@ public class MobSpawner implements Updateable {
 		
 		timePassed += t;
 		
-		while(spawned < calc.mobs && timePassed >= timePerSpawn) { //HUGE LAGS => while
+		while(toSpawn > 0 && timePassed >= timePerSpawn) { //HUGE LAGS => while
 			
 			timePassed -= timePerSpawn;
 			spawnMob();
@@ -42,15 +53,30 @@ public class MobSpawner implements Updateable {
 
 	private void spawnMob() {
 		
-		getGame().getMap().getMobs().add(new Minion(getGame().getMap().getMobPath()));
-		spawned++;
+		MobCreator creator = defaultMobCreator;
+		
+//		if(getWave() > 0)
+			for(MobCreator c: mobCreators)
+				
+				if(c.getValue() <= toSpawn && c.spawn(r)) {
+					
+					creator = c;
+					break;
+					
+				}
+		
+		final Mob mob = creator.create(getGame().getMap().getMobPath());
+		
+		toSpawn -= creator.getValue();
+		
+		getGame().getMap().getMobs().add(mob);
 		
 	}
 
 	private void onNewWaveStart() {
 		timePerSpawn = calc.spawningTime / calc.mobs;
 		timePassed = timePerSpawn/2; //FIRST MOBS SPAWNS EARLIER, LAST ONE DOES NOT SPAWN TOO LATE
-		spawned = 0;
+		toSpawn = calc.mobs;
 	}
 	
 	public Game getGame() {
