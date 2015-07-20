@@ -18,7 +18,7 @@ public class Game {
 	
 	private Frame frame;
 	private Base base;
-	private int money = 50;
+	private int money = 30;
 	
 	public Game() {
 		

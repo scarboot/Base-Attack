@@ -9,10 +9,10 @@ public class Tank extends Mob {
 
 	public static final int VALUE = 3;
 	
-	public static final double REDUCTION = 0.1;
+	public static final double REDUCTION = 0.2;
 	
 	public Tank(Path path) {
-		super(path, 2, new Hitbox(20), 9, VALUE);
+		super(path, 2, new Hitbox(20), 8, VALUE);
 	}
 	
 	@Override
