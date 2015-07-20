@@ -8,7 +8,7 @@ import base_attack.ui.Images;
 public class TowerMeta<T extends Tower> {
 
 	private final Game game;
-	private final BufferedImage imageColored, imageGrey;
+	private final BufferedImage imageColored, imageGray;
 	private final String name;
 	private final int price;
 	private final double damage, cooldown, range;
@@ -17,7 +17,7 @@ public class TowerMeta<T extends Tower> {
 	public TowerMeta(Game game, String name, int price, double damage, double cooldown, double range, Class<T> clazz) {
 		this.game = game;
 		this.imageColored = Images.loadImage(clazz.getSimpleName());
-		this.imageGrey = Images.loadImage(clazz.getSimpleName() + "Grey");
+		this.imageGray = Images.loadImage(clazz.getSimpleName() + "Gray");
 		this.name = name;
 		this.price = price;
 		this.damage = damage;
@@ -59,8 +59,8 @@ public class TowerMeta<T extends Tower> {
 		return imageColored;
 	}
 	
-	public BufferedImage getImageGrey() {
-		return imageGrey;
+	public BufferedImage getImageGray() {
+		return imageGray;
 	}
 	
 	public double getDamage() {
@@ -80,7 +80,7 @@ public class TowerMeta<T extends Tower> {
 	}
 
 	public BufferedImage getImage(boolean canBuy) {
-		return canBuy ? getImageColored() : getImageGrey();
+		return canBuy ? getImageColored() : getImageGray();
 	}
 
 	public double getCooldown() {

@@ -11,13 +11,14 @@ public class Game {
 	private final MobSpawner spawner = new MobSpawner(this);
 	
 	private final TowerMeta<?>[] towerMetas = new TowerMeta<?>[]{
-			new TowerMeta<SlingTower>(this, "Sling Tower", 10, SlingTower.class),
-			new TowerMeta<MPTower>(this, "MP Tower", 35, MPTower.class),
+			new TowerMeta<SlingTower>(this, "Sling Tower", SlingTower.PRICE, SlingTower.class),
+			new TowerMeta<MPTower>(this, "MP Tower", MPTower.PRICE, MPTower.class),
+			new TowerMeta<CutThroughTower>(this, "Cut-Through Tower", CutThroughTower.PRICE, CutThroughTower.class),
 	};
 	
 	private Frame frame;
 	private Base base;
-	private int money = 30;
+	private int money = 50;
 	
 	public Game() {
 		

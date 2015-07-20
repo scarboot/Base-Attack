@@ -59,6 +59,12 @@ public class Bullet {
 		
 		//CHECK COLISSION
 		
+		return checkColission();
+		
+	}
+	
+	protected boolean checkColission() {
+		
 		for(Mob m: getGame().getMap().getMobs())
 			
 			if(getHitbox().intersects(m.getHitbox())) {
@@ -73,7 +79,7 @@ public class Bullet {
 		
 	}
 
-	private Hitbox getHitbox() {
+	public Hitbox getHitbox() {
 		return hitbox;
 	}
 
