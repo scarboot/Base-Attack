@@ -2,15 +2,18 @@ package base_attack.ui;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import base_attack.Game;
 import base_attack.Updateable;
 
-public class Display extends Position implements Updateable {
+public abstract class Display extends Component implements Updateable {
 	
 	//CONSTANTS
 	
+	private static final long serialVersionUID = 1L;
+
 	public static final int
 	BORDER = 3,
 	GAP = 10;
@@ -30,23 +33,20 @@ public class Display extends Position implements Updateable {
 	
 	private final Frame frame;
 	
-	public final int
-	space,
-	heightInternal,
-	totalHeight;
+	public final int space, heightInternal;
 	
-	public Display(Frame frame, int heightInternal) {
+	public Display(Frame frame, int y, int heightInternal) {
+		super(new Position(), new Rectangle(0, y, frame.width, heightInternal + BORDER));
 		this.frame = frame;
 		this.heightInternal = heightInternal;
 		this.space = heightInternal + GAP;
-		this.totalHeight = heightInternal + BORDER;
 	}
 	
-	public Display(Frame frame) {
-		this(frame, 60);
+	public Display(Frame frame, int y) {
+		this(frame, 0, y);
 	}
 
-	public Frame getFrame() {
+	public Frame getF() {
 		return frame;
 	}
 	
@@ -96,7 +96,7 @@ public class Display extends Position implements Updateable {
 	}
 	
 	public int getTotalHeight() {
-		return totalHeight;
+		return height;
 	}
 	
 	public int space() {

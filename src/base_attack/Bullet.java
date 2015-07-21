@@ -8,7 +8,7 @@ public class Bullet {
 	private final Game game;
 	
 	private final int radius;
-	private final double damage, range;
+	private final double damage, range, speed;
 	private final Color c;
 
 	private final PointDouble pos = new PointDouble(0, 0);
@@ -24,6 +24,7 @@ public class Bullet {
 		
 		this.radius = radius;
 		this.damage = damage;
+		this.speed = speed;
 		this.c = c;
 		
 		pos.x = x;
@@ -31,7 +32,7 @@ public class Bullet {
 		
 		this.hitbox = new Hitbox(x, y, getRadius());
 		
-		this.vector = PointDouble.getVector(x, y, target.x, target.y).setLength(speed);
+		this.vector = PointDouble.getVector(x, y, target.x, target.y).normalize();
 		this.range = range;
 	}
 	
@@ -42,7 +43,7 @@ public class Bullet {
 		
 		//UPDATE POSITION
 		
-		final PointDouble delta = vector.clone().multiply(t);
+		final PointDouble delta = vector.clone().multiply(t*getSpeed());
 		
 		getPos().add(delta);
 		
@@ -59,6 +60,12 @@ public class Bullet {
 		
 		//CHECK COLISSION
 		
+		return checkColission();
+		
+	}
+	
+	protected boolean checkColission() {
+		
 		for(Mob m: getGame().getMap().getMobs())
 			
 			if(getHitbox().intersects(m.getHitbox())) {
@@ -73,7 +80,7 @@ public class Bullet {
 		
 	}
 
-	private Hitbox getHitbox() {
+	public Hitbox getHitbox() {
 		return hitbox;
 	}
 
@@ -106,6 +113,10 @@ public class Bullet {
 	
 	public Game getGame() {
 		return game;
+	}
+	
+	public double getSpeed() {
+		return speed;
 	}
 
 }

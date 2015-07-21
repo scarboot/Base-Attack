@@ -27,7 +27,7 @@ public class PointDouble {
 		return this;
 	}
 
-	private PointDouble normalize() {
+	public PointDouble normalize() {
 		divide(length());
 		return this;
 	}

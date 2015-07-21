@@ -1,11 +1,11 @@
 package base_attack;
 
-public class MPTower extends Tower {
+public class LMGTower extends Tower {
 	
-	public static final int PRICE = 35;
-	public static final double RANGE = 2.5, COOLDOWN = 0.5;
+	public static final int PRICE = 25;
+	public static final double RANGE = 2.5, COOLDOWN = 0.75;
 
-	public MPTower(Game game, Tile tile, TowerMeta<? extends MPTower> meta) {
+	public LMGTower(Game game, Tile tile, TowerMeta<? extends LMGTower> meta) {
 		super(game, tile, COOLDOWN, RANGE, PRICE/2, meta);
 	}
 

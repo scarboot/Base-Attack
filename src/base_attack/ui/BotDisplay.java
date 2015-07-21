@@ -2,98 +2,96 @@ package base_attack.ui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 
 import base_attack.TowerMeta;
 
 public class BotDisplay extends Display {
 	
+	private static final long serialVersionUID = 1L;
+	
 	public static final int BUTTON_CONTAINER_SIZE = 60, TOWER_BUTTON_FREE_GAP = 3;
+	public static final int BUTTON_SIZE = 50 + 2*3;
 	
-	private final DisplaySpot displaySpot = new DisplaySpot();
-	private final TowerMetaDisplay towerMetaDisplay;
-	private final PlacedTowerDisplay placedTowerDisplay;
+	private final DisplaySpot displaySpot;
+	private final TowerButton[] towerSelection;
 	
-	private final ContentContainer<Container> displaySpotContainer;
-	private final ContentContainer<TowerButton>[] towerSelection;
-	
-	@SuppressWarnings("unchecked")
-	public BotDisplay(Frame f, int x, int y) {
+	public BotDisplay(Frame f, int y) {
 		
-		super(f, TowerMetaDisplay.FONT_HEIGHT + TowerMetaDisplay.LINE_HEIGHT + GAP * (1 + 2));
-		
-		setX(x);
-		setY(y);
-		
-		towerMetaDisplay = new TowerMetaDisplay(f);
-		placedTowerDisplay = new PlacedTowerDisplay(f);
+		super(f, y, TowerMetaDisplay.FONT_HEIGHT + TowerMetaDisplay.LINE_HEIGHT + GAP * (1 + 2));
 		
 		//TOWER DISPLAY
 		
-		final int width = f.width;
-		final int displaySpotWidth = (int) (TowerMetaDisplay.WIDTH_SPACE*3.3);
-		displaySpotContainer = new ContentContainer<Container>(width - displaySpotWidth, 0, displaySpotWidth, heightInternal, displaySpot, GAP);
-		
-		getDisplaySpot().setContent(getTowerMetaDisplay());
+		{
+			
+			final int displaySpotWidth = (int) (TowerMetaDisplay.WIDTH_SPACE*3.3);
+			final int spotX = f.width - displaySpotWidth;
+			
+			displaySpot = new DisplaySpot(f, getObviousPos(), new Rectangle(spotX, 0, displaySpotWidth, height()));
+			
+			getDisplaySpot().setContent(getTowerMetaDisplay());
+			
+		}
 		
 		//TOWER SELECTION
 		
 		final TowerMeta<?>[] towerMetas = getGame().getTowerMetas();
-		towerSelection = new ContentContainer[towerMetas.length];
+		towerSelection = new TowerButton[towerMetas.length];
 		
-		final int beginX = GAP, beginY = height()/2 - BUTTON_CONTAINER_SIZE/2;
+		final int beginX = GAP, beginY = height()/2 - BUTTON_SIZE/2;
+		int addX = 0;
 		
 		for(int i = 0; i < towerMetas.length; i++) {
 			
-			final TowerButton button = new TowerButton(towerMetas[i], getFrame());
+			final TowerButton button = new TowerButton(getObviousPos(), new Rectangle(beginX + addX, beginY, BUTTON_SIZE, BUTTON_SIZE), getF(), towerMetas[i]);
 			
-			final ContentContainer<TowerButton> container = new ContentContainer<TowerButton>(beginX + i*(BUTTON_CONTAINER_SIZE + GAP), beginY, BUTTON_CONTAINER_SIZE, BUTTON_CONTAINER_SIZE, button, GAP/2 - TOWER_BUTTON_FREE_GAP);
+			towerSelection[i] = button;
 			
-			towerSelection[i] = container;
-
-			container.pos.set(container.x + getX(), container.y + getY());
-			
-			button.pos.set(button.x + container.pos.getX(), button.y + container.pos.getY());
+			addX += BUTTON_CONTAINER_SIZE + GAP/2;
 			
 		}
 		
 	}
 	
+	private Position getObviousPos() {
+		return new Position(getPos(), new Point(0, Display.BORDER));
+	}
+
 	@Override
 	public void update(double t) {
 		
 		getTowerMetaDisplay().update(t);
 		getPlacedTowerDisplay().update(t);
 		
-		for(ContentContainer<TowerButton> c: towerSelection)
-			c.getContent().update(t);
+		for(TowerButton b: towerSelection)
+			b.update(t);
 		
 	}
 	
-	public void draw(Graphics2D g) {
+	public void drawContent(Graphics2D g) {
 		
 		drawBorder(g);
 		
-		for(ContentContainer<TowerButton> c: towerSelection)
-			c.draw(g);
+		for(TowerButton b: towerSelection)
+			b.draw(g);
 		
-		getDisplaySpotContainer().draw(g);
+		getDisplaySpot().draw(g);
 
 	}
 	
 	private void drawBorder(Graphics2D g) {
 		
 		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, getFrame().width, BORDER);
+		g.fillRect(0, 0, getF().width, BORDER);
 		
 		//TRANSLATE UNDER BORDER
 		g.translate(0, BORDER);
 		
-		g.fillRect(getDisplaySpotContainer().x, 0, Display.BORDER, height());
-		
 	}
 	
 	public TowerMetaDisplay getTowerMetaDisplay() {
-		return towerMetaDisplay;
+		return getDisplaySpot().getTowerMetaDisplay();
 	}
 	
 	public DisplaySpot getDisplaySpot() {
@@ -101,11 +99,7 @@ public class BotDisplay extends Display {
 	}
 
 	public PlacedTowerDisplay getPlacedTowerDisplay() {
-		return placedTowerDisplay;
-	}
-	
-	private ContentContainer<Container> getDisplaySpotContainer() {
-		return displaySpotContainer;
+		return getDisplaySpot().getPlacedTowerDisplay();
 	}
 
 }

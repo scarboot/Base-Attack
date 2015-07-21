@@ -127,7 +127,15 @@ public abstract class Mob implements Updateable {
 	}
 
 	public void damage(double damage) {
+		
+		if(damage == 0)
+			return;
+		
+		if(damage < 0)
+			throw new IllegalStateException();
+		
 		health -= damage;
+		
 	}
 
 	public void draw(Graphics2D g) {

@@ -11,12 +11,17 @@ public class Game {
 	private final MobSpawner spawner = new MobSpawner(this);
 	
 	private final TowerMeta<?>[] towerMetas = new TowerMeta<?>[]{
-			new TowerMeta<SlingTower>(this, "Sling Tower", 10, SlingTower.class),
-			new TowerMeta<MPTower>(this, "MP Tower", 35, MPTower.class),
+			new TowerMeta<SlingTower>(this, "Sling Tower", SlingTower.PRICE, SlingTower.class),
+			new TowerMeta<GuardTower>(this, "Guard Tower", GuardTower.PRICE, SlingBullet.DAMAGE, GuardTower.COOLDOWN, GuardTower.RANGE, GuardTower.class),
+			new TowerMeta<LMGTower>(this, "LMG Tower", LMGTower.PRICE, LMGTower.class),
+			new TowerMeta<MPTower>(this, "MP Tower", MPTower.PRICE, MPTower.class),
+			new TowerMeta<CutThroughTower>(this, "Cut-Through Tower", CutThroughTower.PRICE, CutThroughTower.class),
+			new TowerMeta<SniperTower>(this, "Sniper Tower", SniperTower.PRICE, SniperTower.class),
 	};
 	
+	private Frame frame;
 	private Base base;
-	private int money = 30;
+	private int money = 24;
 	
 	public Game() {
 		
@@ -154,6 +159,24 @@ public class Game {
 	
 	public boolean isGameOver() {
 		return getBase().isDead();
+	}
+
+	public Frame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(Frame frame) {
+		
+		if(getFrame() != null)
+			throw new IllegalStateException();
+		
+		this.frame = frame;
+	}
+
+	public void onGameEnd() {
+		
+		getFrame().getBotDisplay().getDisplaySpot().setContent(null);
+		
 	}
 	
 }

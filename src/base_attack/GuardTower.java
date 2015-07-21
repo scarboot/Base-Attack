@@ -1,11 +1,11 @@
 package base_attack;
 
-public class SlingTower extends Tower {
+public class GuardTower extends Tower {
 	
-	public static final int PRICE = 8;
-	public static final double RANGE = 4.5, COOLDOWN = 4.5;
+	public static final int PRICE = 25;
+	public static final double RANGE = 5.5, COOLDOWN = 2;
 
-	public SlingTower(Game game, Tile tile, TowerMeta<? extends SlingTower> meta) {
+	public GuardTower(Game game, Tile tile, TowerMeta<? extends GuardTower> meta) {
 		super(game, tile, COOLDOWN, RANGE, PRICE/2, meta);
 	}
 

@@ -1,9 +1,19 @@
 package base_attack.ui;
 
+import java.awt.Point;
+
 public class Position {
 	
-	private int x, y;
+	public int x, y;
 	
+	public Position() {
+	}
+	
+	public Position(Position parentPos, Point location) {
+		setX(parentPos.x + location.x);
+		setY(parentPos.y + location.y);
+	}
+
 	public int getX() {
 		return x;
 	}
